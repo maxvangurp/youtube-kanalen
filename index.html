@@ -3,156 +3,219 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0E0E12">
+<meta name="theme-color" content="#09090C">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Kanalen">
 <title>YouTube Kanalen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root { --bg:#0E0E12; --kaart:#17171D; --lijn:#2A2A33; --tekst:#F2F2F5; --zacht:#9A9AA8; --groen:#22C55E; --rood:#EF4444; }
-  * { box-sizing:border-box; }
-  body { margin:0; background:var(--bg); color:var(--tekst); font:15px/1.5 -apple-system,BlinkMacSystemFont,"Inter",system-ui,sans-serif; }
-  header { padding:24px 16px 8px; max-width:1280px; margin:0 auto; display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px; }
-  h1 { margin:0; font-size:22px; letter-spacing:-.01em; }
-  .meta { color:var(--zacht); font-size:13px; }
-  main { max-width:1280px; margin:0 auto; padding:8px 16px 48px; }
-  .totaal { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; margin-bottom:20px; }
-  .tegel { background:var(--kaart); border:1px solid var(--lijn); border-radius:12px; padding:14px 16px; }
-  .tegel .l { color:var(--zacht); font-size:12px; text-transform:uppercase; letter-spacing:.06em; }
-  .tegel .w { font-size:26px; font-weight:700; margin-top:2px; font-variant-numeric:tabular-nums; }
-  .d { font-size:12px; font-weight:600; }
-  .d.op { color:var(--groen); } .d.neer { color:var(--rood); } .d.nul { color:var(--zacht); }
-  .kanalen { display:grid; grid-template-columns:repeat(auto-fit,minmax(360px,1fr)); gap:16px; }
-  .kanaal { background:var(--kaart); border:1px solid var(--lijn); border-radius:14px; overflow:hidden; }
-  .kop { display:flex; align-items:center; gap:12px; padding:16px; border-bottom:1px solid var(--lijn); }
-  .kop img { width:40px; height:40px; border-radius:50%; }
-  .kop h2 { margin:0; font-size:17px; }
-  .kop a { color:var(--zacht); font-size:12px; text-decoration:none; margin-right:10px; }
-  .kop a:hover { color:var(--tekst); }
-  .streep { width:4px; align-self:stretch; border-radius:2px; }
-  .cijfers { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--lijn); }
-  .cijfers div { background:var(--kaart); padding:10px 14px; }
-  .cijfers .l { color:var(--zacht); font-size:11px; text-transform:uppercase; letter-spacing:.05em; }
-  .cijfers .w { font-size:19px; font-weight:700; font-variant-numeric:tabular-nums; }
-  .blok { padding:14px 16px; border-top:1px solid var(--lijn); }
-  .blok h3 { margin:0 0 8px; font-size:12px; color:var(--zacht); text-transform:uppercase; letter-spacing:.06em; font-weight:600; }
-  svg.grafiek { width:100%; height:80px; display:block; }
-  ol, ul { margin:0; padding:0; list-style:none; }
-  li { display:flex; gap:10px; align-items:center; padding:6px 0; border-bottom:1px solid #22222A; font-size:13px; }
-  li:last-child { border-bottom:0; }
-  li img { width:64px; height:36px; object-fit:cover; border-radius:4px; flex:none; background:#222; }
-  li .t { flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  li a { color:var(--tekst); text-decoration:none; } li a:hover { text-decoration:underline; }
-  li .n { color:var(--zacht); font-variant-numeric:tabular-nums; flex:none; }
-  .label { font-size:11px; padding:2px 6px; border-radius:4px; background:#2A2A33; color:var(--zacht); flex:none; }
-  .label.gepland { background:#1E3A5F; color:#93C5FD; }
-  .fout { padding:16px; color:#FCA5A5; font-size:13px; }
-  .leeg { color:var(--zacht); font-size:13px; }
-  .live { display:flex; align-items:center; gap:10px; padding:10px 16px; border-top:1px solid var(--lijn); font-size:13px; }
-  .live .dot { width:8px; height:8px; border-radius:50%; background:var(--groen); box-shadow:0 0 0 0 rgba(34,197,94,.6); animation:puls 2s infinite; flex:none; }
-  .live b { font-variant-numeric:tabular-nums; }
-  .live .z { color:var(--zacht); }
-  .plus { color:var(--groen); font-weight:600; }
-  @keyframes puls { 0% { box-shadow:0 0 0 0 rgba(34,197,94,.55); } 70% { box-shadow:0 0 0 7px rgba(34,197,94,0); } 100% { box-shadow:0 0 0 0 rgba(34,197,94,0); } }
-  .werk { padding:10px 16px 12px; border-top:1px solid var(--lijn); }
-  .chips { display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
-  .chips .lbl { font-size:11px; color:var(--zacht); text-transform:uppercase; letter-spacing:.06em; margin-right:2px; }
-  .skill { display:inline-flex; align-items:center; gap:6px; padding:5px 10px; border-radius:999px; background:#1D1D25; border:1px solid #2A2A33; cursor:pointer; color:inherit; font:500 12px/1.3 inherit; font-family:inherit; text-align:left; transition:border-color .15s; }
-  .skill:hover { border-color:var(--accent); }
-  .skill.bouwen { background:transparent; border-style:dashed; color:var(--zacht); }
-  .werk details { margin-top:8px; }
-  .werk summary { cursor:pointer; font-size:11px; color:var(--zacht); list-style:none; }
-  .werk summary::-webkit-details-marker { display:none; }
-  .werk summary::before { content:"▸ "; }
-  .werk details[open] summary::before { content:"▾ "; }
-  .uitleg { margin-top:8px; display:grid; gap:6px; font-size:12px; color:var(--zacht); }
-  .uitleg b { color:var(--tekst); font:600 12px ui-monospace,SFMono-Regular,Menlo,monospace; }
-  .open { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; }
-  .open span { font-size:11px; padding:3px 8px; border-radius:999px; background:#22222A; color:#C9C9D3; }
-  .open span::before { content:"○ "; color:var(--accent); }
-  .laatst { font-size:11px; color:var(--zacht); margin-top:8px; }
-  .laatst code { font-size:11px; color:#C9C9D3; }
-  .strook-kop { display:flex; justify-content:space-between; align-items:baseline; margin:4px 0 10px; }
-  .strook-kop h2 { margin:0; font-size:15px; }
-  .strook-kop .knoppen button { background:#1D1D25; border:1px solid var(--lijn); color:var(--tekst); width:30px; height:30px; border-radius:50%; cursor:pointer; font-size:14px; }
-  .strook { display:flex; gap:12px; overflow-x:auto; scroll-snap-type:x mandatory; padding-bottom:10px; margin-bottom:18px; scrollbar-width:thin; }
-  .vid { flex:0 0 260px; scroll-snap-align:start; background:var(--kaart); border:1px solid var(--lijn); border-radius:12px; overflow:hidden; text-decoration:none; color:inherit; transition:transform .15s, border-color .15s; position:relative; }
-  .vid:hover { transform:translateY(-2px); border-color:var(--accent); }
-  .vid .beeld { position:relative; aspect-ratio:16/9; background:#000 center/cover no-repeat; }
-  .vid .beeld::after { content:"▶"; position:absolute; inset:0; display:grid; place-items:center; font-size:28px; color:#fff; opacity:0; background:rgba(0,0,0,.35); transition:opacity .15s; }
-  .vid:hover .beeld::after { opacity:1; }
-  .vid .badge { position:absolute; left:8px; top:8px; font-size:11px; font-weight:700; padding:3px 8px; border-radius:999px; background:var(--accent); color:#0E0E12; z-index:1; }
-  .vid .badge.gepland { background:#1E3A5F; color:#93C5FD; }
-  .vid .kn { position:absolute; right:8px; bottom:8px; font-size:11px; padding:2px 7px; border-radius:4px; background:rgba(14,14,18,.85); z-index:1; }
-  .vid .tx { padding:10px 12px; }
-  .vid .ti { font-size:13px; font-weight:600; line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:35px; }
-  .vid .sub { margin-top:6px; font-size:12px; color:var(--zacht); display:flex; justify-content:space-between; gap:8px; }
-  .toast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%) translateY(20px); background:#F2F2F5; color:#0E0E12; padding:8px 14px; border-radius:999px; font-size:13px; font-weight:600; opacity:0; transition:all .2s; pointer-events:none; }
-  .toast.aan { opacity:1; transform:translateX(-50%); }
-  .nav { display:none; }
-  .kanaal { scroll-margin-top:64px; }
-  * { -webkit-tap-highlight-color:transparent; }
-  @media (hover:none) { .strook-kop .knoppen { display:none; } }
-  @media (max-width:600px) {
-    header { padding:calc(14px + env(safe-area-inset-top)) 16px 4px; }
-    h1 { font-size:20px; }
-    .meta-lang { display:none; }
-    main { padding-bottom:calc(32px + env(safe-area-inset-bottom)); }
-    .nav { display:flex; gap:6px; overflow-x:auto; position:sticky; top:0; z-index:5; padding:8px 16px; margin:0 -16px 10px; background:rgba(14,14,18,.92); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); scrollbar-width:none; }
-    .nav::-webkit-scrollbar { display:none; }
-    .nav a { flex:none; font-size:13px; font-weight:600; padding:6px 12px; border-radius:999px; background:#1D1D25; color:var(--tekst); text-decoration:none; border-left:3px solid var(--accent); }
-    .strook { margin:0 -16px 14px; padding:0 16px 8px; scroll-padding:16px; }
-    .vid { flex-basis:78vw; }
-    .totaal { grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px; }
-    .tegel { padding:10px; border-radius:10px; }
-    .tegel .l { font-size:10px; letter-spacing:.04em; }
-    .tegel .w { font-size:19px; }
-    .tegel .d { font-size:11px; }
-    .tegel .d.nul { display:none; }
-    .kanalen { grid-template-columns:1fr; gap:12px; }
-    .cijfers .w { font-size:17px; }
-    .cijfers div { padding:8px 10px; }
-    li img { width:56px; height:32px; }
-    .kop a { font-size:13px; margin-right:12px; }
+  :root {
+    --bg:#09090C; --vlak:#121217; --vlak2:#18181F; --lijn:rgba(255,255,255,.07); --lijn2:rgba(255,255,255,.12);
+    --tekst:#F4F4F6; --zacht:#8E8E9C; --zachter:#5E5E6B; --groen:#34D399; --rood:#F87171; --accent:#F4F4F6;
+    --r:18px; --cijfer:'Space Grotesk', 'Inter', system-ui, sans-serif;
   }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html { scroll-behavior:smooth; }
+  body { margin:0; color:var(--tekst); font:15px/1.5 'Inter', -apple-system, system-ui, sans-serif; background:var(--bg);
+    background-image:radial-gradient(1200px 500px at 15% -10%, rgba(99,102,241,.13), transparent 60%), radial-gradient(900px 400px at 95% 0%, rgba(255,61,139,.09), transparent 60%);
+    background-attachment:fixed; -webkit-font-smoothing:antialiased; }
+  a { color:inherit; }
+  .wrap { max-width:1280px; margin:0 auto; padding:0 20px; }
 
+  header.wrap { display:flex; align-items:center; justify-content:space-between; gap:12px; padding-top:calc(22px + env(safe-area-inset-top)); padding-bottom:6px; }
+  .merk { display:flex; align-items:center; gap:12px; min-width:0; }
+  .logo { flex:none; width:38px; height:38px; border-radius:11px; display:grid; place-items:center; background:linear-gradient(135deg,#FF3D8B,#6366F1 55%,#3DF5C0); box-shadow:0 6px 24px rgba(99,102,241,.35); }
+  .logo svg { width:18px; height:18px; }
+  h1 { margin:0; font:700 22px/1.1 var(--cijfer); letter-spacing:-.02em; }
+  h1 small { display:block; font:500 12px 'Inter'; color:var(--zacht); letter-spacing:0; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .pil { flex:none; display:inline-flex; align-items:center; gap:8px; font-size:12.5px; color:var(--zacht); padding:7px 12px; border:1px solid var(--lijn); border-radius:999px; background:rgba(255,255,255,.03); cursor:help; white-space:nowrap; }
+  .stip { flex:none; width:7px; height:7px; border-radius:50%; background:var(--groen); animation:puls 2.2s infinite; }
+  @keyframes puls { 0% { box-shadow:0 0 0 0 rgba(52,211,153,.5); } 70% { box-shadow:0 0 0 8px rgba(52,211,153,0); } 100% { box-shadow:0 0 0 0 rgba(52,211,153,0); } }
+
+  .filter { position:sticky; top:0; z-index:20; padding:12px 0; background:linear-gradient(var(--bg) 72%, transparent); }
+  .filter .wrap { display:flex; gap:8px; overflow-x:auto; scrollbar-width:none; }
+  .filter .wrap::-webkit-scrollbar { display:none; }
+  .fk { flex:none; display:inline-flex; align-items:center; gap:8px; padding:7px 14px 7px 8px; border-radius:999px; border:1px solid var(--lijn); background:var(--vlak); color:var(--zacht); font:600 13px 'Inter'; cursor:pointer; transition:all .18s; }
+  .fk.zonder { padding-left:14px; }
+  .fk img { width:22px; height:22px; border-radius:50%; }
+  .fk:hover { color:var(--tekst); border-color:var(--lijn2); }
+  .fk.aan { color:#0B0B0F; background:var(--accent); border-color:transparent; box-shadow:0 6px 20px -8px var(--accent); }
+
+  .hero { display:grid; grid-template-columns:1.1fr 1.4fr; gap:16px; margin:6px 0 24px; }
+  .paneel { background:linear-gradient(180deg, var(--vlak2), var(--vlak)); border:1px solid var(--lijn); border-radius:var(--r); }
+  .kpis { display:grid; grid-template-columns:repeat(3,1fr); }
+  .kpi { padding:18px 18px 16px; border-right:1px solid var(--lijn); border-bottom:1px solid var(--lijn); min-width:0; }
+  .kpi:nth-child(3n) { border-right:0; }
+  .kpi:nth-last-child(-n+3) { border-bottom:0; }
+  .kpi .l { font-size:12px; color:var(--zacht); }
+  .kpi .w { font:700 28px/1.15 var(--cijfer); letter-spacing:-.02em; margin-top:4px; font-variant-numeric:tabular-nums; }
+  .kpi .d { display:block; font-size:12px; font-weight:600; margin-top:2px; }
+  .op { color:var(--groen); } .neer { color:var(--rood); } .nul { color:var(--zachter); }
+  .grafpaneel { padding:16px 18px 12px; display:flex; flex-direction:column; min-width:0; }
+  .graftop { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
+  .graftop h2 { margin:0; font:600 15px var(--cijfer); }
+  .graftop .z { font-size:12px; color:var(--zacht); }
+  .seg { display:inline-flex; background:rgba(255,255,255,.04); border:1px solid var(--lijn); border-radius:999px; padding:3px; }
+  .seg button { border:0; background:transparent; color:var(--zacht); font:600 12px 'Inter'; padding:5px 11px; border-radius:999px; cursor:pointer; transition:all .15s; }
+  .seg button.aan { background:rgba(255,255,255,.1); color:var(--tekst); }
+  .graf { position:relative; flex:1; min-height:170px; margin-top:10px; touch-action:pan-y; }
+  .graf svg { width:100%; height:100%; display:block; }
+  .tip { position:absolute; top:0; pointer-events:none; transform:translate(-50%, -105%); background:#F4F4F6; color:#0B0B0F; padding:6px 9px; border-radius:8px; font-size:12px; font-weight:600; white-space:nowrap; opacity:0; transition:opacity .12s; box-shadow:0 8px 24px rgba(0,0,0,.4); z-index:3; }
+  .tip span { display:block; font-weight:500; color:#55555F; font-size:11px; }
+  .legenda { display:flex; gap:14px; flex-wrap:wrap; font-size:12px; color:var(--zacht); margin-top:10px; }
+  .legenda i { display:inline-block; width:8px; height:8px; border-radius:2px; margin-right:6px; }
+
+  .sectiekop { display:flex; justify-content:space-between; align-items:center; margin:0 0 12px; }
+  .sectiekop h2 { margin:0; font:600 17px var(--cijfer); letter-spacing:-.01em; }
+  .pijlen button { width:34px; height:34px; border-radius:50%; border:1px solid var(--lijn); background:var(--vlak); color:var(--tekst); cursor:pointer; font-size:16px; }
+  .pijlen button:hover { border-color:var(--lijn2); }
+  .strook { display:flex; gap:14px; overflow-x:auto; scroll-snap-type:x mandatory; padding:4px 2px 14px; margin-bottom:22px; scrollbar-width:none; }
+  .strook::-webkit-scrollbar { display:none; }
+  .vid { flex:0 0 280px; scroll-snap-align:start; border-radius:16px; overflow:hidden; text-decoration:none; background:var(--vlak); border:1px solid var(--lijn); transition:transform .2s, box-shadow .2s, border-color .2s; }
+  .vid:hover { transform:translateY(-3px); border-color:color-mix(in srgb, var(--accent) 60%, transparent); box-shadow:0 14px 34px -14px var(--accent); }
+  .vid .beeld { position:relative; aspect-ratio:16/9; overflow:hidden; background:#000; }
+  .vid .beeld > img { width:100%; height:100%; object-fit:cover; transition:transform .4s; display:block; }
+  .vid:hover .beeld > img { transform:scale(1.06); }
+  .vid .beeld::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,.35), transparent 35%, transparent 55%, rgba(0,0,0,.65)); }
+  .vid .play { position:absolute; inset:0; display:grid; place-items:center; z-index:2; opacity:0; transition:opacity .2s; }
+  .vid .play b { width:46px; height:46px; border-radius:50%; background:rgba(255,255,255,.92); color:#0B0B0F; display:grid; place-items:center; font-size:16px; padding-left:3px; }
+  .vid:hover .play { opacity:1; }
+  .badge { position:absolute; left:10px; top:10px; z-index:2; font-size:11px; font-weight:700; padding:4px 9px; border-radius:999px; background:var(--accent); color:#0B0B0F; }
+  .badge.gepland { background:rgba(15,23,42,.85); color:#BFDBFE; border:1px solid rgba(147,197,253,.35); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); }
+  .kn { position:absolute; left:10px; bottom:9px; z-index:2; font-size:11.5px; font-weight:600; display:flex; align-items:center; gap:6px; }
+  .kn img { width:18px; height:18px; border-radius:50%; border:1.5px solid var(--accent); }
+  .vid .tx { padding:11px 13px 13px; }
+  .vid .ti { font-weight:600; font-size:13.5px; line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:36px; }
+  .vid .sub { display:flex; justify-content:space-between; gap:8px; margin-top:7px; font-size:12px; color:var(--zacht); }
+  .plus { color:var(--groen); font-weight:700; }
+
+  .kanalen { display:grid; grid-template-columns:repeat(auto-fill,minmax(380px,1fr)); gap:16px; padding-bottom:40px; }
+  .kaart { position:relative; border-radius:var(--r); background:linear-gradient(180deg, color-mix(in srgb, var(--accent) 9%, var(--vlak2)) 0, var(--vlak) 130px); border:1px solid var(--lijn); overflow:hidden; scroll-margin-top:70px; }
+  .kaart::before { content:""; position:absolute; inset:0 0 auto 0; height:2px; background:linear-gradient(90deg, transparent, var(--accent), transparent); opacity:.85; }
+  .kkop { display:flex; align-items:center; gap:12px; padding:16px 16px 12px; }
+  .kkop > img { flex:none; width:44px; height:44px; border-radius:50%; box-shadow:0 0 0 2px var(--bg), 0 0 0 4px var(--accent); }
+  .kkop h3 { margin:0; font:700 17px var(--cijfer); letter-spacing:-.01em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .kkop .rol { font-size:12px; color:var(--zacht); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .kkop .acties { margin-left:auto; display:flex; gap:6px; flex:none; }
+  .ib { width:32px; height:32px; border-radius:10px; border:1px solid var(--lijn); display:grid; place-items:center; color:var(--zacht); text-decoration:none; transition:all .15s; background:rgba(255,255,255,.02); }
+  .ib:hover { color:var(--tekst); border-color:var(--accent); }
+  .ib svg { width:16px; height:16px; }
+  .kc { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; padding:0 16px; }
+  .kc > div { background:rgba(255,255,255,.03); border:1px solid var(--lijn); border-radius:12px; padding:10px 12px; min-width:0; }
+  .kc .l { font-size:11.5px; color:var(--zacht); }
+  .kc .w { font:700 21px/1.2 var(--cijfer); font-variant-numeric:tabular-nums; margin-top:2px; }
+  .kc .d { font-size:11.5px; font-weight:600; }
+  .livebalk { display:flex; align-items:center; gap:10px; margin:10px 16px 0; padding:9px 12px; border-radius:12px; background:rgba(52,211,153,.06); border:1px solid rgba(52,211,153,.18); font-size:12.5px; }
+  .livebalk.wacht { background:rgba(255,255,255,.025); border-color:var(--lijn); color:var(--zacht); }
+  .livebalk.wacht .stip { background:var(--zachter); animation:none; }
+  .livebalk b { font-family:var(--cijfer); font-size:14px; }
+  .kgraf { padding:12px 16px 2px; }
+  .kgraf .graf { min-height:90px; height:90px; flex:none; }
+  .tabs { display:flex; gap:2px; padding:6px 12px 0; border-top:1px solid var(--lijn); margin-top:10px; }
+  .tabs button { border:0; background:transparent; color:var(--zacht); font:600 12.5px 'Inter'; padding:9px 8px; border-bottom:2px solid transparent; cursor:pointer; }
+  .tabs button.aan { color:var(--tekst); border-bottom-color:var(--accent); }
+  .tabs .n { display:inline-grid; place-items:center; min-width:17px; height:17px; padding:0 5px; border-radius:999px; font-size:10.5px; background:rgba(255,255,255,.08); color:var(--tekst); margin-left:5px; }
+  .lijst { padding:6px 16px 10px; min-height:110px; }
+  .lijst ul { list-style:none; margin:0; padding:0; }
+  .lijst li a { display:grid; grid-template-columns:72px 1fr auto; gap:12px; align-items:center; padding:7px 6px; margin:0 -6px; border-radius:10px; text-decoration:none; transition:background .15s; }
+  .lijst li a:hover { background:rgba(255,255,255,.04); }
+  .lijst img { width:72px; height:40px; object-fit:cover; border-radius:7px; background:#222; display:block; }
+  .lijst .t { font-size:13px; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .lijst .m { font-size:11.5px; color:var(--zacht); margin-top:1px; }
+  .lijst .r { text-align:right; font:600 13px var(--cijfer); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .lijst .r small { display:block; font:500 11px 'Inter'; color:var(--zacht); }
+  .label { font:600 11px 'Inter'; padding:3px 8px; border-radius:999px; background:rgba(255,255,255,.06); color:var(--zacht); }
+  .label.gepland { background:rgba(147,197,253,.12); color:#BFDBFE; }
+  .leeg { font-size:13px; color:var(--zachter); padding:14px 0; }
+  .fout { margin:0 16px 16px; padding:12px; border-radius:12px; background:rgba(248,113,113,.08); color:#FCA5A5; font-size:13px; }
+
+  .werk { padding:10px 16px 14px; border-top:1px solid var(--lijn); }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; }
+  .skill { display:inline-flex; align-items:center; gap:6px; padding:6px 11px; border-radius:999px; background:rgba(255,255,255,.03); border:1px solid var(--lijn); cursor:pointer; color:var(--tekst); font:500 12px/1.3 'Inter'; text-align:left; transition:all .15s; }
+  .skill:hover { border-color:var(--accent); background:color-mix(in srgb, var(--accent) 10%, transparent); }
+  .skill.bouwen { border-style:dashed; color:var(--zacht); }
+  .werk details { margin-top:8px; }
+  .werk summary { cursor:pointer; font-size:11.5px; color:var(--zachter); list-style:none; display:inline-flex; align-items:center; gap:6px; }
+  .werk summary::-webkit-details-marker { display:none; }
+  .werk summary::before { content:"›"; transition:transform .15s; display:inline-block; font-size:14px; }
+  .werk details[open] summary::before { transform:rotate(90deg); }
+  .uitleg { margin-top:8px; display:grid; gap:5px; font-size:12px; color:var(--zacht); }
+  .uitleg b { color:var(--tekst); font:600 12px ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .open { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; }
+  .open span { font-size:11px; padding:3px 9px; border-radius:999px; background:rgba(255,255,255,.04); color:#C9C9D3; }
+  .open span::before { content:"○ "; color:var(--accent); }
+  .laatst { font-size:11px; color:var(--zachter); margin-top:8px; }
+
+  footer.wrap { color:var(--zachter); font-size:12px; padding-bottom:calc(30px + env(safe-area-inset-bottom)); }
+  .toast { position:fixed; left:50%; bottom:calc(24px + env(safe-area-inset-bottom)); transform:translate(-50%, 20px); background:#F4F4F6; color:#0B0B0F; padding:9px 16px; border-radius:999px; font-size:13px; font-weight:600; opacity:0; transition:all .2s; pointer-events:none; z-index:50; }
+  .toast.aan { opacity:1; transform:translate(-50%, 0); }
+  .fade { animation:fade .45s ease both; }
+  @keyframes fade { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+  @media (hover:none) { .pijlen { display:none; } .vid .play { display:none; } }
+  @media (max-width:900px) { .hero { grid-template-columns:1fr; } }
+  @media (max-width:600px) {
+    .wrap { padding:0 16px; }
+    h1 { font-size:19px; } h1 small { display:none; }
+    .pil { font-size:11.5px; padding:6px 10px; }
+    .kpi { padding:12px 12px 10px; } .kpi .w { font-size:21px; } .kpi .l { font-size:11px; } .kpi .d { font-size:11px; }
+    .kpi .d .nul { display:none; }
+    .graf { min-height:140px; }
+    .strook { margin:0 -16px 18px; padding:4px 16px 12px; scroll-padding:16px; }
+    .vid { flex-basis:80vw; }
+    .kanalen { grid-template-columns:1fr; gap:12px; }
+    .kc { gap:6px; } .kc > div { padding:9px 10px; } .kc .w { font-size:18px; }
+    .lijst li a { grid-template-columns:60px 1fr auto; gap:10px; }
+    .lijst img { width:60px; height:34px; }
+  }
+  @media (prefers-reduced-motion:reduce) { * { animation:none !important; transition:none !important; } }
 </style>
 </head>
 <body>
-<header>
-  <h1>YouTube Kanalen</h1>
-  <div class="meta" id="meta"></div>
+<header class="wrap">
+  <div class="merk">
+    <div class="logo"><svg viewBox="0 0 24 24" fill="#fff"><path d="M8 5.5v13l11-6.5z"/></svg></div>
+    <h1>Kanalen<small id="ondertitel"></small></h1>
+  </div>
+  <span class="pil" id="pil"><span class="stip"></span><span id="pilTxt">Laden…</span></span>
 </header>
-<main>
-  <div class="strook-kop"><h2>Net live en ingepland</h2><span class="knoppen"><button data-sc="-1" aria-label="Vorige">‹</button> <button data-sc="1" aria-label="Volgende">›</button></span></div>
+<nav class="filter"><div class="wrap" id="filter"></div></nav>
+<main class="wrap">
+  <div class="sectiekop" style="margin-top:6px"><h2>Net live en ingepland</h2><span class="pijlen"><button data-sc="-1" aria-label="Vorige">‹</button> <button data-sc="1" aria-label="Volgende">›</button></span></div>
   <section class="strook" id="strook"></section>
-  <nav class="nav" id="nav"></nav>
-  <section class="totaal" id="totaal"></section>
+  <section class="hero fade">
+    <div class="paneel kpis" id="kpis"></div>
+    <div class="paneel grafpaneel">
+      <div class="graftop"><h2 id="grafTitel">Weergaven per dag</h2>
+        <div class="seg" id="heroSeg"><button data-m="weergaven" class="aan">Weergaven</button><button data-m="minuten">Kijkuren</button><button data-m="erbij">Abonnees</button></div></div>
+      <div class="graf" id="heroGraf"></div>
+      <div class="legenda" id="legenda"></div>
+    </div>
+  </section>
   <section class="kanalen" id="kanalen"></section>
-  <p class="meta" style="margin-top:24px">Persoonlijk dashboard van Max van Gurp · <a href="privacy.html" style="color:inherit">Privacyverklaring</a></p>
 </main>
+<footer class="wrap">Persoonlijk dashboard van Max van Gurp · <a href="privacy.html">Privacyverklaring</a></footer>
+<div class="toast" id="toast"></div>
 <script>
-const DATA = {"bijgewerkt":"2026-11-07T22:31:20.777Z","van":"2026-10-11","tot":"2026-11-05","kanalen":[{"sleutel":"MODOBEAM","naam":"Modobeam","id":"UCYpKe2KSKjti5DWakmhljkA","kleur":"#3B82F6","titel":"Modobeam","avatar":"https://yt3.ggpht.com/vmyJlvRjdR5WWgyKsw6paQC9c5K79L8B-ZzR4uWR2H5zLG1VvuCkkEAyqC0xVYUbopuKkhbbnw=s88-c-k-c0x00ffffff-no-rj","abonnees":113,"totaalWeergaven":45974,"aantalVideos":75,"periode":{"views":456,"estimatedMinutesWatched":307,"subscribersGained":3,"subscribersLost":0,"likes":56,"comments":0},"vorigePeriode":{"views":315,"estimatedMinutesWatched":159,"subscribersGained":0,"subscribersLost":0,"likes":3,"comments":0},"perDag":[{"dag":"2026-10-11","weergaven":6,"minuten":0,"erbij":0},{"dag":"2026-10-12","weergaven":17,"minuten":12,"erbij":0},{"dag":"2026-10-13","weergaven":16,"minuten":0,"erbij":0},{"dag":"2026-10-14","weergaven":16,"minuten":12,"erbij":0},{"dag":"2026-10-15","weergaven":10,"minuten":1,"erbij":0},{"dag":"2026-10-16","weergaven":10,"minuten":5,"erbij":0},{"dag":"2026-10-17","weergaven":9,"minuten":0,"erbij":0},{"dag":"2026-10-18","weergaven":10,"minuten":5,"erbij":0},{"dag":"2026-10-19","weergaven":15,"minuten":12,"erbij":0},{"dag":"2026-10-20","weergaven":8,"minuten":8,"erbij":0},{"dag":"2026-10-21","weergaven":9,"minuten":3,"erbij":0},{"dag":"2026-10-22","weergaven":22,"minuten":1,"erbij":0},{"dag":"2026-10-23","weergaven":3,"minuten":0,"erbij":0},{"dag":"2026-10-24","weergaven":10,"minuten":0,"erbij":0},{"dag":"2026-10-25","weergaven":10,"minuten":6,"erbij":0},{"dag":"2026-10-26","weergaven":15,"minuten":2,"erbij":0},{"dag":"2026-10-27","weergaven":14,"minuten":1,"erbij":0},{"dag":"2026-10-28","weergaven":11,"minuten":8,"erbij":0},{"dag":"2026-10-29","weergaven":12,"minuten":10,"erbij":0},{"dag":"2026-10-30","weergaven":35,"minuten":28,"erbij":0},{"dag":"2026-10-31","weergaven":8,"minuten":5,"erbij":0},{"dag":"2026-11-01","weergaven":24,"minuten":11,"erbij":0},{"dag":"2026-11-02","weergaven":24,"minuten":5,"erbij":0},{"dag":"2026-11-03","weergaven":19,"minuten":25,"erbij":0},{"dag":"2026-11-04","weergaven":33,"minuten":86,"erbij":1},{"dag":"2026-11-05","weergaven":90,"minuten":48,"erbij":2}],"top":[{"id":"rftb6Fr4CzM","titel":"Yanomami Traditional Attire | Elder and Dance Ceremony in the Amazon","weergaven":229,"minuten":16,"kijkpct":100.22},{"id":"lZ5siQGgze4","titel":"The 7 Principles of Influence by Cialdini (2025 Guide) | Persuasion Psychology Explained","weergaven":144,"minuten":276,"kijkpct":49.3},{"id":"7OWYYyEwIyw","titel":"Blue Morpho Butterfly Transformation | From Cocoon to Full Color Wings | #bluemorpho #butterfly","weergaven":9,"minuten":0,"kijkpct":74.77},{"id":"PxToFVo_58Y","titel":"Serval Hunting in the Wild | Cinematic Nature Video | #serval #wildlife","weergaven":6,"minuten":0,"kijkpct":27.87},{"id":"Ydo-jato9B8","titel":"Snow Leopard Evolution in the Mountains | Wildlife Video (4K) | #snowleopard #animalgrowth","weergaven":4,"minuten":0,"kijkpct":71.33},{"id":"JipgE5p-0-k","titel":"Bison in the Wild | Cinematic Nature Video | #bison #wildlife #animals","weergaven":3,"minuten":0,"kijkpct":196.81},{"id":"MIpmfmJMSJI","titel":"Swordfish Evolution | From Baby to Adult in a Cinematic Ocean Scene | #swordfish #sea","weergaven":3,"minuten":0,"kijkpct":0},{"id":"ZUbVLdn9YVc","titel":"Rare Albino Capybara in the Wild | Relaxing Nature Video | #albinocapybara #albinoanimals","weergaven":3,"minuten":0,"kijkpct":45.65},{"id":"PMPPcVJYOG4","titel":"Sphynx Cat Transformation | From Cute Kitten to Elegant Adult | #sphynxcat #catlovers","weergaven":2,"minuten":0,"kijkpct":96.47},{"id":"T9XfqetESZU","titel":"Tapir in the Rainforest | Cinematic Nature Video | #tapir #nature","weergaven":2,"minuten":0,"kijkpct":98.3}],"videos":[{"id":"lw03at30gKc","titel":"7 P's of Marketing | The 3 P's Most Brands Forget | #marketing #business","gepubliceerd":"2026-11-07T11:52:32Z","thumb":"https://i.ytimg.com/vi/lw03at30gKc/mqdefault.jpg","status":"public","gepland":null,"duur":"PT36S","weergaven":12,"likes":2,"reacties":0},{"id":"r6m6D6g382A","titel":"The 7 P's of Marketing Explained (Most People Forget 3)","gepubliceerd":"2026-11-07T11:49:54Z","thumb":"https://i.ytimg.com/vi/r6m6D6g382A/mqdefault.jpg","status":"public","gepland":null,"duur":"PT8M42S","weergaven":6,"likes":1,"reacties":1},{"id":"5rlqxe1iwJc","titel":"Polar Bear Evolution in the Arctic | Wildlife Video (4K) | #polarbear #wildlife","gepubliceerd":"2025-12-24T07:00:08Z","thumb":"https://i.ytimg.com/vi/5rlqxe1iwJc/mqdefault.jpg","status":"public","gepland":null,"duur":"PT21S","weergaven":12,"likes":3,"reacties":0},{"id":"JipgE5p-0-k","titel":"Bison in the Wild | Cinematic Nature Video | #bison #wildlife #animals","gepubliceerd":"2025-12-23T05:00:21Z","thumb":"https://i.ytimg.com/vi/JipgE5p-0-k/mqdefault.jpg","status":"public","gepland":null,"duur":"PT15S","weergaven":21,"likes":3,"reacties":0},{"id":"PxToFVo_58Y","titel":"Serval Hunting in the Wild | Cinematic Nature Video | #serval #wildlife","gepubliceerd":"2025-12-22T05:00:37Z","thumb":"https://i.ytimg.com/vi/PxToFVo_58Y/mqdefault.jpg","status":"public","gepland":null,"duur":"PT23S","weergaven":18,"likes":1,"reacties":0},{"id":"Ec-8XzJk32A","titel":"Jaguar Evolution in the Jungle | Wildlife Video (4K) | #jaguar #animalgrowth #wildlife","gepubliceerd":"2025-12-21T07:00:16Z","thumb":"https://i.ytimg.com/vi/Ec-8XzJk32A/mqdefault.jpg","status":"public","gepland":null,"duur":"PT38S","weergaven":7,"likes":2,"reacties":0},{"id":"3RerTf-2Kuk","titel":"Moose Evolution in the Forest | Wildlife Video (4K) | #moose #naturelovers","gepubliceerd":"2025-12-20T11:00:08Z","thumb":"https://i.ytimg.com/vi/3RerTf-2Kuk/mqdefault.jpg","status":"public","gepland":null,"duur":"PT18S","weergaven":10,"likes":1,"reacties":0},{"id":"Ydo-jato9B8","titel":"Snow Leopard Evolution in the Mountains | Wildlife Video (4K) | #snowleopard #animalgrowth","gepubliceerd":"2025-12-19T08:00:53Z","thumb":"https://i.ytimg.com/vi/Ydo-jato9B8/mqdefault.jpg","status":"public","gepland":null,"duur":"PT23S","weergaven":13,"likes":1,"reacties":0},{"id":"PVdFwyP_6Mw","titel":"Okapi Evolution in the Rainforest | Wildlife Video | #okapi #animalgrowth","gepubliceerd":"2025-12-18T10:00:43Z","thumb":"https://i.ytimg.com/vi/PVdFwyP_6Mw/mqdefault.jpg","status":"public","gepland":null,"duur":"PT17S","weergaven":11,"likes":1,"reacties":0},{"id":"59c1VII1dNA","titel":"Koi Carp Journey | Stunning Underwater Close-Ups and Colors | #koicarp #koicarpfish","gepubliceerd":"2025-12-17T11:00:19Z","thumb":"https://i.ytimg.com/vi/59c1VII1dNA/mqdefault.jpg","status":"public","gepland":null,"duur":"PT39S","weergaven":10,"likes":2,"reacties":0},{"id":"VF_tAxXm8aw","titel":"Stickleback | Cinematic Underwater Close-Up | #stickleback #fish","gepubliceerd":"2025-12-16T05:00:39Z","thumb":"https://i.ytimg.com/vi/VF_tAxXm8aw/mqdefault.jpg","status":"public","gepland":null,"duur":"PT18S","weergaven":922,"likes":26,"reacties":0},{"id":"hQfBPqtDg6w","titel":"Yellow Tang Fish | From Baby to Full Adult Reef Fish | #yellowtang #fish","gepubliceerd":"2025-12-15T05:01:01Z","thumb":"https://i.ytimg.com/vi/hQfBPqtDg6w/mqdefault.jpg","status":"public","gepland":null,"duur":"PT13S","weergaven":353,"likes":6,"reacties":0},{"id":"fHpWY7hXVoE","titel":"Gorilla Transformation | From Baby Gorilla to Silverback | #gorilla #animalgrowth","gepubliceerd":"2025-12-14T08:00:51Z","thumb":"https://i.ytimg.com/vi/fHpWY7hXVoE/mqdefault.jpg","status":"public","gepland":null,"duur":"PT37S","weergaven":521,"likes":11,"reacties":0},{"id":"C_f36YYx5rs","titel":"Komodo Dragon Transformation | From Baby to Full Adult | #komododragon #reptile #lizard","gepubliceerd":"2025-12-13T08:00:12Z","thumb":"https://i.ytimg.com/vi/C_f36YYx5rs/mqdefault.jpg","status":"public","gepland":null,"duur":"PT16S","weergaven":1108,"likes":23,"reacties":0},{"id":"GQzm_DkSEok","titel":"Grizzly Bear Transformation | From Cub to Powerful Adult | #grizzlybear #bears","gepubliceerd":"2025-12-12T11:00:38Z","thumb":"https://i.ytimg.com/vi/GQzm_DkSEok/mqdefault.jpg","status":"public","gepland":null,"duur":"PT35S","weergaven":581,"likes":20,"reacties":0},{"id":"w7Fqzi6rqAA","titel":"Cane Corso Transformation | From Puppy to Powerful Adult | #canecorso #canecorsopuppy","gepubliceerd":"2025-12-11T15:02:02Z","thumb":"https://i.ytimg.com/vi/w7Fqzi6rqAA/mqdefault.jpg","status":"public","gepland":null,"duur":"PT21S","weergaven":918,"likes":38,"reacties":0},{"id":"Rbm9tCDMhaQ","titel":"Labrador Transformation | From Cream Puppy to Full Adult | #labradorpuppy #labradorlight","gepubliceerd":"2025-12-10T07:00:27Z","thumb":"https://i.ytimg.com/vi/Rbm9tCDMhaQ/mqdefault.jpg","status":"public","gepland":null,"duur":"PT23S","weergaven":159,"likes":8,"reacties":0},{"id":"zc64OiIFfOI","titel":"Leonberger Transformation | From Fluffy Puppy to Majestic Giant | #leonberger","gepubliceerd":"2025-12-09T16:01:45Z","thumb":"https://i.ytimg.com/vi/zc64OiIFfOI/mqdefault.jpg","status":"public","gepland":null,"duur":"PT24S","weergaven":18,"likes":2,"reacties":0},{"id":"s7a9sn_kx18","titel":"Thai Ridgeback Transformation | From Puppy to Powerful Adult | #thairidgeback #thairidgebackpuppy","gepubliceerd":"2025-12-08T17:01:29Z","thumb":"https://i.ytimg.com/vi/s7a9sn_kx18/mqdefault.jpg","status":"public","gepland":null,"duur":"PT49S","weergaven":173,"likes":6,"reacties":0},{"id":"nv3tDUKDuf8","titel":"Pitbull Transformation | From Puppy to Strong Adult Dog | #pitbull #pitbullpuppy","gepubliceerd":"2025-12-07T05:01:06Z","thumb":"https://i.ytimg.com/vi/nv3tDUKDuf8/mqdefault.jpg","status":"public","gepland":null,"duur":"PT28S","weergaven":394,"likes":14,"reacties":0},{"id":"0nWeQ6sKY4c","titel":"Labradoodle Transformation | From Fluffy Puppy to Full Adult | #labradoodle #labradoodlepuppy","gepubliceerd":"2025-12-06T07:00:02Z","thumb":"https://i.ytimg.com/vi/0nWeQ6sKY4c/mqdefault.jpg","status":"public","gepland":null,"duur":"PT23S","weergaven":542,"likes":27,"reacties":1},{"id":"DMex48D-8jQ","titel":"Dutch Shepherd Transformation | From Puppy to Powerful Adult | #dutchshepherd #doglife","gepubliceerd":"2025-12-05T06:00:18Z","thumb":"https://i.ytimg.com/vi/DMex48D-8jQ/mqdefault.jpg","status":"public","gepland":null,"duur":"PT18S","weergaven":663,"likes":55,"reacties":1},{"id":"kmmj39w4yJw","titel":"Belgian Malinois Transformation | From Puppy to Full Adult | #belgianmalinois #puppy","gepubliceerd":"2025-12-04T10:01:19Z","thumb":"https://i.ytimg.com/vi/kmmj39w4yJw/mqdefault.jpg","status":"public","gepland":null,"duur":"PT35S","weergaven":662,"likes":36,"reacties":2},{"id":"7OWYYyEwIyw","titel":"Blue Morpho Butterfly Transformation | From Cocoon to Full Color Wings | #bluemorpho #butterfly","gepubliceerd":"2025-12-03T08:00:08Z","thumb":"https://i.ytimg.com/vi/7OWYYyEwIyw/mqdefault.jpg","status":"public","gepland":null,"duur":"PT18S","weergaven":246,"likes":7,"reacties":0},{"id":"YRvMWEwwal0","titel":"Toucan Transformation | From Baby Bird to Colorful Adult | #toucan #toucanbaby","gepubliceerd":"2025-12-02T11:01:10Z","thumb":"https://i.ytimg.com/vi/YRvMWEwwal0/mqdefault.jpg","status":"public","gepland":null,"duur":"PT20S","weergaven":679,"likes":20,"reacties":0},{"id":"PMPPcVJYOG4","titel":"Sphynx Cat Transformation | From Cute Kitten to Elegant Adult | #sphynxcat #catlovers","gepubliceerd":"2025-12-01T18:00:28Z","thumb":"https://i.ytimg.com/vi/PMPPcVJYOG4/mqdefault.jpg","status":"public","gepland":null,"duur":"PT17S","weergaven":1388,"likes":52,"reacties":0},{"id":"1uYA98rkqUY","titel":"Mandrill With Vibrant Colors | Eating in the Jungle | #mandrill #wildlife","gepubliceerd":"2025-11-30T07:00:02Z","thumb":"https://i.ytimg.com/vi/1uYA98rkqUY/mqdefault.jpg","status":"public","gepland":null,"duur":"PT16S","weergaven":261,"likes":4,"reacties":0},{"id":"oLEqJ-kP-WQ","titel":"Black Panther in the Wild | Cinematic Jungle Wildlife | #blackpanther #wildlife","gepubliceerd":"2025-11-29T07:00:47Z","thumb":"https://i.ytimg.com/vi/oLEqJ-kP-WQ/mqdefault.jpg","status":"public","gepland":null,"duur":"PT30S","weergaven":251,"likes":7,"reacties":0},{"id":"T9XfqetESZU","titel":"Tapir in the Rainforest | Cinematic Nature Video | #tapir #nature","gepubliceerd":"2025-11-29T01:22:32Z","thumb":"https://i.ytimg.com/vi/T9XfqetESZU/mqdefault.jpg","status":"public","gepland":null,"duur":"PT26S","weergaven":58,"likes":2,"reacties":0},{"id":"r2o884YSQ28","titel":"Hedgehog in the Forest | Close-Up Wildlife Footage | #hedgehog","gepubliceerd":"2025-11-28T22:27:24Z","thumb":"https://i.ytimg.com/vi/r2o884YSQ28/mqdefault.jpg","status":"public","gepland":null,"duur":"PT13S","weergaven":1350,"likes":19,"reacties":1},{"id":"ZUbVLdn9YVc","titel":"Rare Albino Capybara in the Wild | Relaxing Nature Video | #albinocapybara #albinoanimals","gepubliceerd":"2025-11-28T18:00:46Z","thumb":"https://i.ytimg.com/vi/ZUbVLdn9YVc/mqdefault.jpg","status":"public","gepland":null,"duur":"PT17S","weergaven":955,"likes":20,"reacties":0},{"id":"4f5_uolvWyE","titel":"Capybara in the Wild | Relaxing Nature Video | #capybara #wildlife","gepubliceerd":"2025-11-28T14:00:14Z","thumb":"https://i.ytimg.com/vi/4f5_uolvWyE/mqdefault.jpg","status":"public","gepland":null,"duur":"PT20S","weergaven":1096,"likes":21,"reacties":0},{"id":"D0IP9s-DpqU","titel":"Color-Shifting Poison Dart Frog | Vibrant Jungle Macro Video | #poisondartfrog","gepubliceerd":"2025-11-28T07:00:11Z","thumb":"https://i.ytimg.com/vi/D0IP9s-DpqU/mqdefault.jpg","status":"public","gepland":null,"duur":"PT31S","weergaven":531,"likes":5,"reacties":0},{"id":"gXkYDwsHsPk","titel":"Amazing Frog Footage in Nature | Realistic Wildlife Close-Up | #frog #wildlife","gepubliceerd":"2025-11-27T20:28:45Z","thumb":"https://i.ytimg.com/vi/gXkYDwsHsPk/mqdefault.jpg","status":"public","gepland":null,"duur":"PT15S","weergaven":1041,"likes":23,"reacties":0},{"id":"UjFiMNjqq3A","titel":"Capricorn Mountain Goat Evolution | Animal Growth | #capricorn #animals","gepubliceerd":"2025-11-27T17:21:26Z","thumb":"https://i.ytimg.com/vi/UjFiMNjqq3A/mqdefault.jpg","status":"public","gepland":null,"duur":"PT23S","weergaven":165,"likes":4,"reacties":0},{"id":"iVIvId-CW-U","titel":"Koala Journey | Cinematic Close-Ups in the Eucalyptus Forest | #koala #animalgrowth","gepubliceerd":"2025-11-27T09:05:56Z","thumb":"https://i.ytimg.com/vi/iVIvId-CW-U/mqdefault.jpg","status":"public","gepland":null,"duur":"PT29S","weergaven":1744,"likes":32,"reacties":0},{"id":"tZuHHi_dJGI","titel":"Color-Shifting Wild Betta Fish | Stunning Nature Scenes | #betafish #nature #fish","gepubliceerd":"2025-11-26T23:01:26Z","thumb":"https://i.ytimg.com/vi/tZuHHi_dJGI/mqdefault.jpg","status":"public","gepland":null,"duur":"PT30S","weergaven":1634,"likes":36,"reacties":4},{"id":"ZthdgeM2i_Q","titel":"Peacock Transformation | From Chick to Full Feather Display | #peacock #nature #animalgrowth","gepubliceerd":"2025-11-26T20:53:56Z","thumb":"https://i.ytimg.com/vi/ZthdgeM2i_Q/mqdefault.jpg","status":"public","gepland":null,"duur":"PT40S","weergaven":140,"likes":23,"reacties":0},{"id":"Y7CRAIhZ6Os","titel":"Arctic Fox Transformation | From Baby to Adult in Stunning Arctic Landscapes | #arcticfox","gepubliceerd":"2025-11-26T17:01:05Z","thumb":"https://i.ytimg.com/vi/Y7CRAIhZ6Os/mqdefault.jpg","status":"public","gepland":null,"duur":"PT31S","weergaven":1079,"likes":41,"reacties":0},{"id":"Tkd0z5_FPUg","titel":"Color-Shifting Chameleon | Stunning Realistic Transformations | #chameleon #naturelovers","gepubliceerd":"2025-11-26T10:00:51Z","thumb":"https://i.ytimg.com/vi/Tkd0z5_FPUg/mqdefault.jpg","status":"public","gepland":null,"duur":"PT23S","weergaven":1551,"likes":22,"reacties":0},{"id":"nwi4lx3Zakk","titel":"Lemur That Changes Color | Ultra Realistic Wildlife | #lemur #colorfullemur #wildlifevideo","gepubliceerd":"2025-11-25T23:25:47Z","thumb":"https://i.ytimg.com/vi/nwi4lx3Zakk/mqdefault.jpg","status":"public","gepland":null,"duur":"PT26S","weergaven":253,"likes":7,"reacties":0},{"id":"ZW64e-NeeFc","titel":"Scarlet Macaw in the Rainforest | Cinematic Wildlife Video | #scarletmacaw #macaw","gepubliceerd":"2025-11-25T21:59:36Z","thumb":"https://i.ytimg.com/vi/ZW64e-NeeFc/mqdefault.jpg","status":"public","gepland":null,"duur":"PT21S","weergaven":314,"likes":5,"reacties":0},{"id":"goL4sLK5FiE","titel":"Adorable Pika Close-Up | Cutest Mountain Creature | #pika #wildlife #cutestanimals","gepubliceerd":"2025-11-25T19:42:39Z","thumb":"https://i.ytimg.com/vi/goL4sLK5FiE/mqdefault.jpg","status":"public","gepland":null,"duur":"PT31S","weergaven":1460,"likes":36,"reacties":0},{"id":"d3gfQindlZI","titel":"Quokka Close-Up in Nature | The Happiest Animal on Earth | #quokka #animals","gepubliceerd":"2025-11-25T17:12:55Z","thumb":"https://i.ytimg.com/vi/d3gfQindlZI/mqdefault.jpg","status":"public","gepland":null,"duur":"PT25S","weergaven":208,"likes":3,"reacties":0},{"id":"MIpmfmJMSJI","titel":"Swordfish Evolution | From Baby to Adult in a Cinematic Ocean Scene | #swordfish #sea","gepubliceerd":"2025-11-25T16:44:24Z","thumb":"https://i.ytimg.com/vi/MIpmfmJMSJI/mqdefault.jpg","status":"public","gepland":null,"duur":"PT33S","weergaven":1859,"likes":18,"reacties":0},{"id":"9YGMrLtNklg","titel":"Red Panda Transformation | From Wobbly Baby to Forest Guardian | #redpanda #animalshorts","gepubliceerd":"2025-11-25T08:57:34Z","thumb":"https://i.ytimg.com/vi/9YGMrLtNklg/mqdefault.jpg","status":"public","gepland":null,"duur":"PT20S","weergaven":513,"likes":8,"reacties":0},{"id":"_iFoEi1BiFk","titel":"Alpaca Transformation | From Wobbly Legs to Wise Eyes | #alpaca #animalgrowth #animals","gepubliceerd":"2025-11-24T21:42:19Z","thumb":"https://i.ytimg.com/vi/_iFoEi1BiFk/mqdefault.jpg","status":"public","gepland":null,"duur":"PT27S","weergaven":247,"likes":1,"reacties":0},{"id":"IcufCvGv57s","titel":"Life of an Octopus | From Hatchling to Guardian | #octopus #worldoctopusday","gepubliceerd":"2025-11-24T21:16:04Z","thumb":"https://i.ytimg.com/vi/IcufCvGv57s/mqdefault.jpg","status":"public","gepland":null,"duur":"PT19S","weergaven":1859,"likes":23,"reacties":0},{"id":"r2mmduzd8B0","titel":"Life of a Sea Turtle | From Egg to Ocean Elder | #seaturtles #animalgrowth","gepubliceerd":"2025-11-24T20:20:18Z","thumb":"https://i.ytimg.com/vi/r2mmduzd8B0/mqdefault.jpg","status":"public","gepland":null,"duur":"PT16S","weergaven":103,"likes":2,"reacties":0},{"id":"Rb6p8AUu_1c","titel":"Wolf Transformation | From Cub to Alpha | #wolf #animalgrowth","gepubliceerd":"2025-11-24T14:46:58Z","thumb":"https://i.ytimg.com/vi/Rb6p8AUu_1c/mqdefault.jpg","status":"public","gepland":null,"duur":"PT23S","weergaven":1650,"likes":33,"reacties":0}],"werkplaats":{"map":"~/Documents/modobeam","git":"modobeam","rol":"Marketing explained · lange uitlegvideo's","skills":[{"naam":"youtube-video-productie","icoon":"🎬","wat":"Lange uitlegvideo van script tot publicatie: Higgsfield-shots, stem, Remotion, Studio-upload.","start":"Maak een nieuwe Modobeam-video over \u003conderwerp>"},{"naam":"youtube-short-promo","icoon":"⚡","wat":"Promo-short van 30-45 s bij een lange video, linkt door als Gerelateerde video.","start":"Maak de promo-short bij Modobeam-video \u003cNN>"},{"naam":"youtube-clipping","icoon":"✂️","wat":"Serie 9:16-clips uit een lange video, met captions en eindkaart naar de lange video.","start":"Maak clips van Modobeam-video \u003cNN>"}],"open":[],"laatst":null},"live":null},{"sleutel":"EASYUNFOLD","naam":"Easy Unfold","id":"UCY1BvT4ShG5LIXzMaj3zB9A","kleur":"#B5D600","titel":"Easy Unfold","avatar":"https://yt3.ggpht.com/Vtf_BDAk9PNCQY8jmrilUZlrpaTMwvWDOOIl3oeXdtbC-gxKaP28Lxd4E4ToIcFtv_vdf0RN0w=s88-c-k-c0x00ffffff-no-rj","abonnees":1,"totaalWeergaven":0,"aantalVideos":2,"periode":{"views":0,"estimatedMinutesWatched":0,"subscribersGained":0,"subscribersLost":0,"likes":0,"comments":0},"vorigePeriode":{"views":0,"estimatedMinutesWatched":0,"subscribersGained":0,"subscribersLost":0,"likes":0,"comments":0},"perDag":[{"dag":"2026-10-11","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-12","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-13","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-14","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-15","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-16","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-17","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-18","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-19","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-20","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-21","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-22","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-23","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-24","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-25","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-26","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-27","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-28","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-29","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-30","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-31","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-01","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-02","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-03","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-04","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-05","weergaven":0,"minuten":0,"erbij":0}],"top":[],"videos":[{"id":"29df1e6Z4qY","titel":"The 7 Patterns That Solve a Rubik's Cube #shorts","gepubliceerd":"2026-11-07T22:02:45Z","thumb":"https://i.ytimg.com/vi/29df1e6Z4qY/mqdefault.jpg","status":"public","gepland":null,"duur":"PT1M24S","weergaven":2,"likes":0,"reacties":0},{"id":"iHef2uAQKf4","titel":"Every Poker Hand Ranked in 30 Seconds #shorts","gepubliceerd":"2026-11-07T21:35:32Z","thumb":"https://i9.ytimg.com/vi/iHef2uAQKf4/mqdefault.jpg?sqp=COjMvtcG&rs=AOn4CLBYc6rDmNYd9O3giNc7E0_nuQEwEw","status":"private","gepland":"2026-11-08T16:00:00Z","duur":"PT29S","weergaven":0,"likes":0,"reacties":0},{"id":"LXYmVePeRsM","titel":"Poker Hands Ranked: All 10 Hands From Worst to Best (+ Quiz)","gepubliceerd":"2026-11-07T21:34:00Z","thumb":"https://i9.ytimg.com/vi/LXYmVePeRsM/mqdefault.jpg?sqp=COjMvtcG&rs=AOn4CLBgBPZnAHK9vuvYjQJm62bnfaaRUA","status":"private","gepland":"2026-11-08T16:00:00Z","duur":"PT3M55S","weergaven":0,"likes":0,"reacties":0},{"id":"Va3Ka3EQczE","titel":"The Entire Rubik's Cube Method in 60 Seconds #shorts","gepubliceerd":"2026-11-07T20:22:04Z","thumb":"https://i9.ytimg.com/vi/Va3Ka3EQczE/mqdefault.jpg?sqp=COjMvtcG&rs=AOn4CLAnUMii4LrdKC2vGW9a_BEQgXLUqw","status":"private","gepland":null,"duur":"PT1M","weergaven":21,"likes":1,"reacties":0},{"id":"MtIQeVJBAm8","titel":"How to Solve a Rubik's Cube (Easiest Beginner Method)","gepubliceerd":"2026-11-07T20:21:29Z","thumb":"https://i.ytimg.com/vi/MtIQeVJBAm8/mqdefault.jpg","status":"public","gepland":null,"duur":"PT8M19S","weergaven":4,"likes":1,"reacties":0}],"werkplaats":{"map":"~/Documents/okay-but-how","git":"okay-but-how","rol":"Faceless how-to · samen met Bowie","skills":[{"naam":"easy-unfold","icoon":"🧩","wat":"Lange how-to (8-10 min) + Short: zoekwoord, script met cues, stem Cedric, Remotion in Acid Volt, mastering, handleiding op Netlify, privé upload.","start":"Maak Easy Unfold-video 03 over \u003conderwerp>"},{"naam":"youtube-clipping","icoon":"✂️","wat":"Shorts knippen uit een eigen lange video.","start":"Maak clips van Easy Unfold-video \u003cNN>"}],"open":["Bowie als beheerder toevoegen","Stemsnelheid kiezen: 1.12 (Poker v2) of 0.93","Bestaande video's masteren op -14 LUFS"],"laatst":{"datum":"2026-11-07T23:07:31+01:00","onderwerp":"Rubik Short: titel/beschrijving eerlijker; nieuwe render wacht op uploadlimiet"}},"live":null},{"sleutel":"WHYSTRENDING","naam":"Why's Trending?","id":"UCDjHZmmTIm7HcQAJvaDKqnA","kleur":"#FF3D8B","titel":"Why's Trending?","avatar":"https://yt3.ggpht.com/7ZTWvokt3kVd-kBPPHKRJ95xlnN4KuSmrQndM93YZracygtXWQps5YPtzrIFMr0K-rzb8VAfQA=s88-c-k-c0x00ffffff-no-rj","abonnees":1,"totaalWeergaven":0,"aantalVideos":6,"periode":{"views":0,"estimatedMinutesWatched":0,"subscribersGained":0,"subscribersLost":0,"likes":0,"comments":0},"vorigePeriode":{"views":0,"estimatedMinutesWatched":0,"subscribersGained":0,"subscribersLost":0,"likes":0,"comments":0},"perDag":[{"dag":"2026-10-11","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-12","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-13","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-14","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-15","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-16","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-17","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-18","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-19","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-20","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-21","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-22","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-23","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-24","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-25","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-26","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-27","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-28","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-29","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-30","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-31","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-01","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-02","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-03","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-04","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-05","weergaven":0,"minuten":0,"erbij":0}],"top":[],"videos":[{"id":"KX8ziaxs9PE","titel":"NASA Is Hiring Astronauts (For a Moon Base) #shorts","gepubliceerd":"2026-11-07T21:48:34Z","thumb":"https://i.ytimg.com/vi/KX8ziaxs9PE/mqdefault.jpg","status":"public","gepland":null,"duur":"PT51S","weergaven":2,"likes":0,"reacties":0},{"id":"Wl70vi6QAsk","titel":"Why Melania Is Going to the LSU Game (It's Not Football) #shorts","gepubliceerd":"2026-11-07T21:09:38Z","thumb":"https://i.ytimg.com/vi/Wl70vi6QAsk/mqdefault.jpg","status":"public","gepland":null,"duur":"PT54S","weergaven":4,"likes":2,"reacties":0},{"id":"sFJxVIQ5WKo","titel":"Trump Wants the UFC Boss as His Press Secretary #shorts","gepubliceerd":"2026-11-07T20:36:03Z","thumb":"https://i.ytimg.com/vi/sFJxVIQ5WKo/mqdefault.jpg","status":"public","gepland":null,"duur":"PT55S","weergaven":4,"likes":0,"reacties":0},{"id":"L1SrBQcS9OI","titel":"The Man From Japan Taking On FIFA's Infantino #shorts","gepubliceerd":"2026-11-07T20:25:56Z","thumb":"https://i.ytimg.com/vi/L1SrBQcS9OI/mqdefault.jpg","status":"public","gepland":null,"duur":"PT1M3S","weergaven":4,"likes":1,"reacties":0},{"id":"HWGO_7ihVLc","titel":"Florida State Is Paying $47M to Fire Its Coach #shorts","gepubliceerd":"2026-11-07T19:03:41Z","thumb":"https://i.ytimg.com/vi/HWGO_7ihVLc/mqdefault.jpg","status":"public","gepland":null,"duur":"PT52S","weergaven":71,"likes":1,"reacties":0},{"id":"6bBtaQ0HHtI","titel":"Heath Ledger Was Nolan's THIRD Choice for the Joker #shorts","gepubliceerd":"2026-11-07T18:55:20Z","thumb":"https://i.ytimg.com/vi/6bBtaQ0HHtI/mqdefault.jpg","status":"public","gepland":null,"duur":"PT49S","weergaven":73,"likes":2,"reacties":0}],"werkplaats":{"map":"~/Documents/whys-trending","git":"whys-trending","rol":"Trend-explainers van 40-60 s · zelfstandig publiceren","skills":[{"naam":"whys-trending","icoon":"📈","wat":"Trendscan, fact check (2+ bronnen), stem Lily, Remotion in roze huisstijl, upload en publicatie.","start":"Maak een video voor Why's Trending"},{"naam":"youtube-clipping","icoon":"✂️","wat":"Clips uit andermans video's, alleen met geldige rechtengrond en eigen laag.","start":"Zoek video's die we mogen clippen over \u003conderwerp>"}],"open":["Trendscan (Google Trends + Whop) verder automatiseren"],"laatst":{"datum":"2026-11-07T22:49:05+01:00","onderwerp":"Video 006 NASA live (eerste met echte beelden)"}},"live":null},{"sleutel":"PLAYERATLAS","naam":"Player Atlas","id":"UCHJ0I6Geqeupn-nnY48tmew","kleur":"#3DF5C0","titel":"Player Atlas","avatar":"https://yt3.ggpht.com/iblzhSzggCHno6zrSo3z6P2LZS1c9PPtGDefOAVXvHAQaxm8znrD7oDk9aI3Y2UzPDoFwbXj6g=s88-c-k-c0x00ffffff-no-rj","abonnees":0,"totaalWeergaven":0,"aantalVideos":1,"periode":{"views":0,"estimatedMinutesWatched":0,"subscribersGained":0,"subscribersLost":0,"likes":0,"comments":0},"vorigePeriode":{"views":0,"estimatedMinutesWatched":0,"subscribersGained":0,"subscribersLost":0,"likes":0,"comments":0},"perDag":[{"dag":"2026-10-11","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-12","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-13","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-14","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-15","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-16","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-17","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-18","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-19","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-20","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-21","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-22","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-23","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-24","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-25","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-26","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-27","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-28","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-29","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-30","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-31","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-01","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-02","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-03","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-04","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-05","weergaven":0,"minuten":0,"erbij":0}],"top":[],"videos":[{"id":"6xR_2VY2y98","titel":"From Dishwasher to £75 Million: Virgil van Dijk's Route #shorts","gepubliceerd":"2026-11-07T22:22:14Z","thumb":"https://i9.ytimg.com/vi/6xR_2VY2y98/mqdefault.jpg?sqp=COjMvtcG&rs=AOn4CLCWrmGmaQ331tUkDVuOhCEqaXfBIQ","status":"private","gepland":null,"duur":"PT43S","weergaven":1,"likes":0,"reacties":0},{"id":"cbzNR-djRYc","titel":"Virgil van Dijk: From Dishwasher to £75 Million | The Route","gepubliceerd":"2026-11-07T22:06:36Z","thumb":"https://i.ytimg.com/vi/cbzNR-djRYc/mqdefault.jpg","status":"public","gepland":null,"duur":"PT4M1S","weergaven":1,"likes":0,"reacties":0}],"werkplaats":{"map":"~/Documents/sporter-kanaal","git":"sporter-kanaal","rol":"Sporterscarrières als kaartroute · samen met Bowie","skills":[{"naam":"player-atlas","icoon":"🗺️","wat":"Eén sporter per video: Wikidata-carrière, fact check (2 bronnen), inkomen als schatting, kaartroute in Remotion, Short, thumbnail, privé upload.","start":"Maak de volgende Player Atlas-video over \u003csporter>"}],"open":["Stem kiezen (001 gebruikt nu Lily)","VS-kaart bouwen voor NBA/NFL","Bowie als beheerder","2FA/passkey op het account"],"laatst":{"datum":"2026-11-07T23:22:23+01:00","onderwerp":"Short No.001 openbaar"}},"live":null},{"sleutel":"WHATAI","naam":"What AI Was Thinking","id":"UCm3f-JqXH2f42K35kLJmjgQ","kleur":"#A98BFF","titel":"What AI Was Thinking","avatar":"https://yt3.ggpht.com/LnIAMM3q6afe4juLBxQyEM3CiTVhHeWUqZd0ZQc8NPBxD_Q6_QumlHS9pBEdQVFPTjTBlnfZcw=s88-c-k-c0x00ffffff-no-rj","abonnees":0,"totaalWeergaven":0,"aantalVideos":0,"periode":{"views":0,"estimatedMinutesWatched":0,"subscribersGained":0,"subscribersLost":0,"likes":0,"comments":0},"vorigePeriode":{"views":0,"estimatedMinutesWatched":0,"subscribersGained":0,"subscribersLost":0,"likes":0,"comments":0},"perDag":[{"dag":"2026-10-11","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-12","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-13","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-14","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-15","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-16","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-17","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-18","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-19","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-20","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-21","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-22","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-23","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-24","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-25","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-26","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-27","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-28","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-29","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-30","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-31","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-01","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-02","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-03","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-04","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-05","weergaven":0,"minuten":0,"erbij":0}],"top":[],"videos":[],"werkplaats":{"map":"~/Documents/what-ai-was-thinking","git":"what-ai-was-thinking","rol":"AI doet iets geks · wat dacht hij? · merkkanaal onder modobeam@","skills":[],"open":["Stem voor het AI-personage kiezen","Eerste 3 Shorts: make it pop, €10 dinner, soep die omhoog stroomt","Skill what-ai-was-thinking maken na video 001"],"laatst":{"datum":"2026-11-07T23:16:26+01:00","onderwerp":"Dubbele regel weg"}},"live":null}]};
+const DATA = {"bijgewerkt":"2026-11-07T22:35:06.289Z","van":"2026-10-11","tot":"2026-11-05","kanalen":[{"sleutel":"MODOBEAM","naam":"Modobeam","id":"UCYpKe2KSKjti5DWakmhljkA","kleur":"#3B82F6","titel":"Modobeam","avatar":"https://yt3.ggpht.com/vmyJlvRjdR5WWgyKsw6paQC9c5K79L8B-ZzR4uWR2H5zLG1VvuCkkEAyqC0xVYUbopuKkhbbnw=s88-c-k-c0x00ffffff-no-rj","abonnees":113,"totaalWeergaven":45974,"aantalVideos":75,"periode":{"views":456,"estimatedMinutesWatched":307,"subscribersGained":3,"subscribersLost":0,"likes":56,"comments":0},"vorigePeriode":{"views":315,"estimatedMinutesWatched":159,"subscribersGained":0,"subscribersLost":0,"likes":3,"comments":0},"perDag":[{"dag":"2026-10-11","weergaven":6,"minuten":0,"erbij":0},{"dag":"2026-10-12","weergaven":17,"minuten":12,"erbij":0},{"dag":"2026-10-13","weergaven":16,"minuten":0,"erbij":0},{"dag":"2026-10-14","weergaven":16,"minuten":12,"erbij":0},{"dag":"2026-10-15","weergaven":10,"minuten":1,"erbij":0},{"dag":"2026-10-16","weergaven":10,"minuten":5,"erbij":0},{"dag":"2026-10-17","weergaven":9,"minuten":0,"erbij":0},{"dag":"2026-10-18","weergaven":10,"minuten":5,"erbij":0},{"dag":"2026-10-19","weergaven":15,"minuten":12,"erbij":0},{"dag":"2026-10-20","weergaven":8,"minuten":8,"erbij":0},{"dag":"2026-10-21","weergaven":9,"minuten":3,"erbij":0},{"dag":"2026-10-22","weergaven":22,"minuten":1,"erbij":0},{"dag":"2026-10-23","weergaven":3,"minuten":0,"erbij":0},{"dag":"2026-10-24","weergaven":10,"minuten":0,"erbij":0},{"dag":"2026-10-25","weergaven":10,"minuten":6,"erbij":0},{"dag":"2026-10-26","weergaven":15,"minuten":2,"erbij":0},{"dag":"2026-10-27","weergaven":14,"minuten":1,"erbij":0},{"dag":"2026-10-28","weergaven":11,"minuten":8,"erbij":0},{"dag":"2026-10-29","weergaven":12,"minuten":10,"erbij":0},{"dag":"2026-10-30","weergaven":35,"minuten":28,"erbij":0},{"dag":"2026-10-31","weergaven":8,"minuten":5,"erbij":0},{"dag":"2026-11-01","weergaven":24,"minuten":11,"erbij":0},{"dag":"2026-11-02","weergaven":24,"minuten":5,"erbij":0},{"dag":"2026-11-03","weergaven":19,"minuten":25,"erbij":0},{"dag":"2026-11-04","weergaven":33,"minuten":86,"erbij":1},{"dag":"2026-11-05","weergaven":90,"minuten":48,"erbij":2}],"top":[{"id":"rftb6Fr4CzM","titel":"Yanomami Traditional Attire | Elder and Dance Ceremony in the Amazon","weergaven":229,"minuten":16,"kijkpct":100.22},{"id":"lZ5siQGgze4","titel":"The 7 Principles of Influence by Cialdini (2025 Guide) | Persuasion Psychology Explained","weergaven":144,"minuten":276,"kijkpct":49.3},{"id":"7OWYYyEwIyw","titel":"Blue Morpho Butterfly Transformation | From Cocoon to Full Color Wings | #bluemorpho #butterfly","weergaven":9,"minuten":0,"kijkpct":74.77},{"id":"PxToFVo_58Y","titel":"Serval Hunting in the Wild | Cinematic Nature Video | #serval #wildlife","weergaven":6,"minuten":0,"kijkpct":27.87},{"id":"Ydo-jato9B8","titel":"Snow Leopard Evolution in the Mountains | Wildlife Video (4K) | #snowleopard #animalgrowth","weergaven":4,"minuten":0,"kijkpct":71.33},{"id":"JipgE5p-0-k","titel":"Bison in the Wild | Cinematic Nature Video | #bison #wildlife #animals","weergaven":3,"minuten":0,"kijkpct":196.81},{"id":"MIpmfmJMSJI","titel":"Swordfish Evolution | From Baby to Adult in a Cinematic Ocean Scene | #swordfish #sea","weergaven":3,"minuten":0,"kijkpct":0},{"id":"ZUbVLdn9YVc","titel":"Rare Albino Capybara in the Wild | Relaxing Nature Video | #albinocapybara #albinoanimals","weergaven":3,"minuten":0,"kijkpct":45.65},{"id":"PMPPcVJYOG4","titel":"Sphynx Cat Transformation | From Cute Kitten to Elegant Adult | #sphynxcat #catlovers","weergaven":2,"minuten":0,"kijkpct":96.47},{"id":"T9XfqetESZU","titel":"Tapir in the Rainforest | Cinematic Nature Video | #tapir #nature","weergaven":2,"minuten":0,"kijkpct":98.3}],"videos":[{"id":"lw03at30gKc","titel":"7 P's of Marketing | The 3 P's Most Brands Forget | #marketing #business","gepubliceerd":"2026-11-07T11:52:32Z","thumb":"https://i.ytimg.com/vi/lw03at30gKc/mqdefault.jpg","status":"public","gepland":null,"duur":"PT36S","weergaven":12,"likes":2,"reacties":0},{"id":"r6m6D6g382A","titel":"The 7 P's of Marketing Explained (Most People Forget 3)","gepubliceerd":"2026-11-07T11:49:54Z","thumb":"https://i.ytimg.com/vi/r6m6D6g382A/mqdefault.jpg","status":"public","gepland":null,"duur":"PT8M42S","weergaven":6,"likes":1,"reacties":1},{"id":"5rlqxe1iwJc","titel":"Polar Bear Evolution in the Arctic | Wildlife Video (4K) | #polarbear #wildlife","gepubliceerd":"2025-12-24T07:00:08Z","thumb":"https://i.ytimg.com/vi/5rlqxe1iwJc/mqdefault.jpg","status":"public","gepland":null,"duur":"PT21S","weergaven":12,"likes":3,"reacties":0},{"id":"JipgE5p-0-k","titel":"Bison in the Wild | Cinematic Nature Video | #bison #wildlife #animals","gepubliceerd":"2025-12-23T05:00:21Z","thumb":"https://i.ytimg.com/vi/JipgE5p-0-k/mqdefault.jpg","status":"public","gepland":null,"duur":"PT15S","weergaven":21,"likes":3,"reacties":0},{"id":"PxToFVo_58Y","titel":"Serval Hunting in the Wild | Cinematic Nature Video | #serval #wildlife","gepubliceerd":"2025-12-22T05:00:37Z","thumb":"https://i.ytimg.com/vi/PxToFVo_58Y/mqdefault.jpg","status":"public","gepland":null,"duur":"PT23S","weergaven":18,"likes":1,"reacties":0},{"id":"Ec-8XzJk32A","titel":"Jaguar Evolution in the Jungle | Wildlife Video (4K) | #jaguar #animalgrowth #wildlife","gepubliceerd":"2025-12-21T07:00:16Z","thumb":"https://i.ytimg.com/vi/Ec-8XzJk32A/mqdefault.jpg","status":"public","gepland":null,"duur":"PT38S","weergaven":7,"likes":2,"reacties":0},{"id":"3RerTf-2Kuk","titel":"Moose Evolution in the Forest | Wildlife Video (4K) | #moose #naturelovers","gepubliceerd":"2025-12-20T11:00:08Z","thumb":"https://i.ytimg.com/vi/3RerTf-2Kuk/mqdefault.jpg","status":"public","gepland":null,"duur":"PT18S","weergaven":10,"likes":1,"reacties":0},{"id":"Ydo-jato9B8","titel":"Snow Leopard Evolution in the Mountains | Wildlife Video (4K) | #snowleopard #animalgrowth","gepubliceerd":"2025-12-19T08:00:53Z","thumb":"https://i.ytimg.com/vi/Ydo-jato9B8/mqdefault.jpg","status":"public","gepland":null,"duur":"PT23S","weergaven":13,"likes":1,"reacties":0},{"id":"PVdFwyP_6Mw","titel":"Okapi Evolution in the Rainforest | Wildlife Video | #okapi #animalgrowth","gepubliceerd":"2025-12-18T10:00:43Z","thumb":"https://i.ytimg.com/vi/PVdFwyP_6Mw/mqdefault.jpg","status":"public","gepland":null,"duur":"PT17S","weergaven":11,"likes":1,"reacties":0},{"id":"59c1VII1dNA","titel":"Koi Carp Journey | Stunning Underwater Close-Ups and Colors | #koicarp #koicarpfish","gepubliceerd":"2025-12-17T11:00:19Z","thumb":"https://i.ytimg.com/vi/59c1VII1dNA/mqdefault.jpg","status":"public","gepland":null,"duur":"PT39S","weergaven":10,"likes":2,"reacties":0},{"id":"VF_tAxXm8aw","titel":"Stickleback | Cinematic Underwater Close-Up | #stickleback #fish","gepubliceerd":"2025-12-16T05:00:39Z","thumb":"https://i.ytimg.com/vi/VF_tAxXm8aw/mqdefault.jpg","status":"public","gepland":null,"duur":"PT18S","weergaven":922,"likes":26,"reacties":0},{"id":"hQfBPqtDg6w","titel":"Yellow Tang Fish | From Baby to Full Adult Reef Fish | #yellowtang #fish","gepubliceerd":"2025-12-15T05:01:01Z","thumb":"https://i.ytimg.com/vi/hQfBPqtDg6w/mqdefault.jpg","status":"public","gepland":null,"duur":"PT13S","weergaven":353,"likes":6,"reacties":0},{"id":"fHpWY7hXVoE","titel":"Gorilla Transformation | From Baby Gorilla to Silverback | #gorilla #animalgrowth","gepubliceerd":"2025-12-14T08:00:51Z","thumb":"https://i.ytimg.com/vi/fHpWY7hXVoE/mqdefault.jpg","status":"public","gepland":null,"duur":"PT37S","weergaven":521,"likes":11,"reacties":0},{"id":"C_f36YYx5rs","titel":"Komodo Dragon Transformation | From Baby to Full Adult | #komododragon #reptile #lizard","gepubliceerd":"2025-12-13T08:00:12Z","thumb":"https://i.ytimg.com/vi/C_f36YYx5rs/mqdefault.jpg","status":"public","gepland":null,"duur":"PT16S","weergaven":1108,"likes":23,"reacties":0},{"id":"GQzm_DkSEok","titel":"Grizzly Bear Transformation | From Cub to Powerful Adult | #grizzlybear #bears","gepubliceerd":"2025-12-12T11:00:38Z","thumb":"https://i.ytimg.com/vi/GQzm_DkSEok/mqdefault.jpg","status":"public","gepland":null,"duur":"PT35S","weergaven":581,"likes":20,"reacties":0},{"id":"w7Fqzi6rqAA","titel":"Cane Corso Transformation | From Puppy to Powerful Adult | #canecorso #canecorsopuppy","gepubliceerd":"2025-12-11T15:02:02Z","thumb":"https://i.ytimg.com/vi/w7Fqzi6rqAA/mqdefault.jpg","status":"public","gepland":null,"duur":"PT21S","weergaven":918,"likes":38,"reacties":0},{"id":"Rbm9tCDMhaQ","titel":"Labrador Transformation | From Cream Puppy to Full Adult | #labradorpuppy #labradorlight","gepubliceerd":"2025-12-10T07:00:27Z","thumb":"https://i.ytimg.com/vi/Rbm9tCDMhaQ/mqdefault.jpg","status":"public","gepland":null,"duur":"PT23S","weergaven":159,"likes":8,"reacties":0},{"id":"zc64OiIFfOI","titel":"Leonberger Transformation | From Fluffy Puppy to Majestic Giant | #leonberger","gepubliceerd":"2025-12-09T16:01:45Z","thumb":"https://i.ytimg.com/vi/zc64OiIFfOI/mqdefault.jpg","status":"public","gepland":null,"duur":"PT24S","weergaven":18,"likes":2,"reacties":0},{"id":"s7a9sn_kx18","titel":"Thai Ridgeback Transformation | From Puppy to Powerful Adult | #thairidgeback #thairidgebackpuppy","gepubliceerd":"2025-12-08T17:01:29Z","thumb":"https://i.ytimg.com/vi/s7a9sn_kx18/mqdefault.jpg","status":"public","gepland":null,"duur":"PT49S","weergaven":173,"likes":6,"reacties":0},{"id":"nv3tDUKDuf8","titel":"Pitbull Transformation | From Puppy to Strong Adult Dog | #pitbull #pitbullpuppy","gepubliceerd":"2025-12-07T05:01:06Z","thumb":"https://i.ytimg.com/vi/nv3tDUKDuf8/mqdefault.jpg","status":"public","gepland":null,"duur":"PT28S","weergaven":394,"likes":14,"reacties":0},{"id":"0nWeQ6sKY4c","titel":"Labradoodle Transformation | From Fluffy Puppy to Full Adult | #labradoodle #labradoodlepuppy","gepubliceerd":"2025-12-06T07:00:02Z","thumb":"https://i.ytimg.com/vi/0nWeQ6sKY4c/mqdefault.jpg","status":"public","gepland":null,"duur":"PT23S","weergaven":542,"likes":27,"reacties":1},{"id":"DMex48D-8jQ","titel":"Dutch Shepherd Transformation | From Puppy to Powerful Adult | #dutchshepherd #doglife","gepubliceerd":"2025-12-05T06:00:18Z","thumb":"https://i.ytimg.com/vi/DMex48D-8jQ/mqdefault.jpg","status":"public","gepland":null,"duur":"PT18S","weergaven":663,"likes":55,"reacties":1},{"id":"kmmj39w4yJw","titel":"Belgian Malinois Transformation | From Puppy to Full Adult | #belgianmalinois #puppy","gepubliceerd":"2025-12-04T10:01:19Z","thumb":"https://i.ytimg.com/vi/kmmj39w4yJw/mqdefault.jpg","status":"public","gepland":null,"duur":"PT35S","weergaven":662,"likes":36,"reacties":2},{"id":"7OWYYyEwIyw","titel":"Blue Morpho Butterfly Transformation | From Cocoon to Full Color Wings | #bluemorpho #butterfly","gepubliceerd":"2025-12-03T08:00:08Z","thumb":"https://i.ytimg.com/vi/7OWYYyEwIyw/mqdefault.jpg","status":"public","gepland":null,"duur":"PT18S","weergaven":246,"likes":7,"reacties":0},{"id":"YRvMWEwwal0","titel":"Toucan Transformation | From Baby Bird to Colorful Adult | #toucan #toucanbaby","gepubliceerd":"2025-12-02T11:01:10Z","thumb":"https://i.ytimg.com/vi/YRvMWEwwal0/mqdefault.jpg","status":"public","gepland":null,"duur":"PT20S","weergaven":679,"likes":20,"reacties":0},{"id":"PMPPcVJYOG4","titel":"Sphynx Cat Transformation | From Cute Kitten to Elegant Adult | #sphynxcat #catlovers","gepubliceerd":"2025-12-01T18:00:28Z","thumb":"https://i.ytimg.com/vi/PMPPcVJYOG4/mqdefault.jpg","status":"public","gepland":null,"duur":"PT17S","weergaven":1388,"likes":52,"reacties":0},{"id":"1uYA98rkqUY","titel":"Mandrill With Vibrant Colors | Eating in the Jungle | #mandrill #wildlife","gepubliceerd":"2025-11-30T07:00:02Z","thumb":"https://i.ytimg.com/vi/1uYA98rkqUY/mqdefault.jpg","status":"public","gepland":null,"duur":"PT16S","weergaven":261,"likes":4,"reacties":0},{"id":"oLEqJ-kP-WQ","titel":"Black Panther in the Wild | Cinematic Jungle Wildlife | #blackpanther #wildlife","gepubliceerd":"2025-11-29T07:00:47Z","thumb":"https://i.ytimg.com/vi/oLEqJ-kP-WQ/mqdefault.jpg","status":"public","gepland":null,"duur":"PT30S","weergaven":251,"likes":7,"reacties":0},{"id":"T9XfqetESZU","titel":"Tapir in the Rainforest | Cinematic Nature Video | #tapir #nature","gepubliceerd":"2025-11-29T01:22:32Z","thumb":"https://i.ytimg.com/vi/T9XfqetESZU/mqdefault.jpg","status":"public","gepland":null,"duur":"PT26S","weergaven":58,"likes":2,"reacties":0},{"id":"r2o884YSQ28","titel":"Hedgehog in the Forest | Close-Up Wildlife Footage | #hedgehog","gepubliceerd":"2025-11-28T22:27:24Z","thumb":"https://i.ytimg.com/vi/r2o884YSQ28/mqdefault.jpg","status":"public","gepland":null,"duur":"PT13S","weergaven":1350,"likes":19,"reacties":1},{"id":"ZUbVLdn9YVc","titel":"Rare Albino Capybara in the Wild | Relaxing Nature Video | #albinocapybara #albinoanimals","gepubliceerd":"2025-11-28T18:00:46Z","thumb":"https://i.ytimg.com/vi/ZUbVLdn9YVc/mqdefault.jpg","status":"public","gepland":null,"duur":"PT17S","weergaven":955,"likes":20,"reacties":0},{"id":"4f5_uolvWyE","titel":"Capybara in the Wild | Relaxing Nature Video | #capybara #wildlife","gepubliceerd":"2025-11-28T14:00:14Z","thumb":"https://i.ytimg.com/vi/4f5_uolvWyE/mqdefault.jpg","status":"public","gepland":null,"duur":"PT20S","weergaven":1096,"likes":21,"reacties":0},{"id":"D0IP9s-DpqU","titel":"Color-Shifting Poison Dart Frog | Vibrant Jungle Macro Video | #poisondartfrog","gepubliceerd":"2025-11-28T07:00:11Z","thumb":"https://i.ytimg.com/vi/D0IP9s-DpqU/mqdefault.jpg","status":"public","gepland":null,"duur":"PT31S","weergaven":531,"likes":5,"reacties":0},{"id":"gXkYDwsHsPk","titel":"Amazing Frog Footage in Nature | Realistic Wildlife Close-Up | #frog #wildlife","gepubliceerd":"2025-11-27T20:28:45Z","thumb":"https://i.ytimg.com/vi/gXkYDwsHsPk/mqdefault.jpg","status":"public","gepland":null,"duur":"PT15S","weergaven":1041,"likes":23,"reacties":0},{"id":"UjFiMNjqq3A","titel":"Capricorn Mountain Goat Evolution | Animal Growth | #capricorn #animals","gepubliceerd":"2025-11-27T17:21:26Z","thumb":"https://i.ytimg.com/vi/UjFiMNjqq3A/mqdefault.jpg","status":"public","gepland":null,"duur":"PT23S","weergaven":165,"likes":4,"reacties":0},{"id":"iVIvId-CW-U","titel":"Koala Journey | Cinematic Close-Ups in the Eucalyptus Forest | #koala #animalgrowth","gepubliceerd":"2025-11-27T09:05:56Z","thumb":"https://i.ytimg.com/vi/iVIvId-CW-U/mqdefault.jpg","status":"public","gepland":null,"duur":"PT29S","weergaven":1744,"likes":32,"reacties":0},{"id":"tZuHHi_dJGI","titel":"Color-Shifting Wild Betta Fish | Stunning Nature Scenes | #betafish #nature #fish","gepubliceerd":"2025-11-26T23:01:26Z","thumb":"https://i.ytimg.com/vi/tZuHHi_dJGI/mqdefault.jpg","status":"public","gepland":null,"duur":"PT30S","weergaven":1634,"likes":36,"reacties":4},{"id":"ZthdgeM2i_Q","titel":"Peacock Transformation | From Chick to Full Feather Display | #peacock #nature #animalgrowth","gepubliceerd":"2025-11-26T20:53:56Z","thumb":"https://i.ytimg.com/vi/ZthdgeM2i_Q/mqdefault.jpg","status":"public","gepland":null,"duur":"PT40S","weergaven":140,"likes":23,"reacties":0},{"id":"Y7CRAIhZ6Os","titel":"Arctic Fox Transformation | From Baby to Adult in Stunning Arctic Landscapes | #arcticfox","gepubliceerd":"2025-11-26T17:01:05Z","thumb":"https://i.ytimg.com/vi/Y7CRAIhZ6Os/mqdefault.jpg","status":"public","gepland":null,"duur":"PT31S","weergaven":1079,"likes":41,"reacties":0},{"id":"Tkd0z5_FPUg","titel":"Color-Shifting Chameleon | Stunning Realistic Transformations | #chameleon #naturelovers","gepubliceerd":"2025-11-26T10:00:51Z","thumb":"https://i.ytimg.com/vi/Tkd0z5_FPUg/mqdefault.jpg","status":"public","gepland":null,"duur":"PT23S","weergaven":1551,"likes":22,"reacties":0},{"id":"nwi4lx3Zakk","titel":"Lemur That Changes Color | Ultra Realistic Wildlife | #lemur #colorfullemur #wildlifevideo","gepubliceerd":"2025-11-25T23:25:47Z","thumb":"https://i.ytimg.com/vi/nwi4lx3Zakk/mqdefault.jpg","status":"public","gepland":null,"duur":"PT26S","weergaven":253,"likes":7,"reacties":0},{"id":"ZW64e-NeeFc","titel":"Scarlet Macaw in the Rainforest | Cinematic Wildlife Video | #scarletmacaw #macaw","gepubliceerd":"2025-11-25T21:59:36Z","thumb":"https://i.ytimg.com/vi/ZW64e-NeeFc/mqdefault.jpg","status":"public","gepland":null,"duur":"PT21S","weergaven":314,"likes":5,"reacties":0},{"id":"goL4sLK5FiE","titel":"Adorable Pika Close-Up | Cutest Mountain Creature | #pika #wildlife #cutestanimals","gepubliceerd":"2025-11-25T19:42:39Z","thumb":"https://i.ytimg.com/vi/goL4sLK5FiE/mqdefault.jpg","status":"public","gepland":null,"duur":"PT31S","weergaven":1460,"likes":36,"reacties":0},{"id":"d3gfQindlZI","titel":"Quokka Close-Up in Nature | The Happiest Animal on Earth | #quokka #animals","gepubliceerd":"2025-11-25T17:12:55Z","thumb":"https://i.ytimg.com/vi/d3gfQindlZI/mqdefault.jpg","status":"public","gepland":null,"duur":"PT25S","weergaven":208,"likes":3,"reacties":0},{"id":"MIpmfmJMSJI","titel":"Swordfish Evolution | From Baby to Adult in a Cinematic Ocean Scene | #swordfish #sea","gepubliceerd":"2025-11-25T16:44:24Z","thumb":"https://i.ytimg.com/vi/MIpmfmJMSJI/mqdefault.jpg","status":"public","gepland":null,"duur":"PT33S","weergaven":1859,"likes":18,"reacties":0},{"id":"9YGMrLtNklg","titel":"Red Panda Transformation | From Wobbly Baby to Forest Guardian | #redpanda #animalshorts","gepubliceerd":"2025-11-25T08:57:34Z","thumb":"https://i.ytimg.com/vi/9YGMrLtNklg/mqdefault.jpg","status":"public","gepland":null,"duur":"PT20S","weergaven":513,"likes":8,"reacties":0},{"id":"_iFoEi1BiFk","titel":"Alpaca Transformation | From Wobbly Legs to Wise Eyes | #alpaca #animalgrowth #animals","gepubliceerd":"2025-11-24T21:42:19Z","thumb":"https://i.ytimg.com/vi/_iFoEi1BiFk/mqdefault.jpg","status":"public","gepland":null,"duur":"PT27S","weergaven":247,"likes":1,"reacties":0},{"id":"IcufCvGv57s","titel":"Life of an Octopus | From Hatchling to Guardian | #octopus #worldoctopusday","gepubliceerd":"2025-11-24T21:16:04Z","thumb":"https://i.ytimg.com/vi/IcufCvGv57s/mqdefault.jpg","status":"public","gepland":null,"duur":"PT19S","weergaven":1859,"likes":23,"reacties":0},{"id":"r2mmduzd8B0","titel":"Life of a Sea Turtle | From Egg to Ocean Elder | #seaturtles #animalgrowth","gepubliceerd":"2025-11-24T20:20:18Z","thumb":"https://i.ytimg.com/vi/r2mmduzd8B0/mqdefault.jpg","status":"public","gepland":null,"duur":"PT16S","weergaven":103,"likes":2,"reacties":0},{"id":"Rb6p8AUu_1c","titel":"Wolf Transformation | From Cub to Alpha | #wolf #animalgrowth","gepubliceerd":"2025-11-24T14:46:58Z","thumb":"https://i.ytimg.com/vi/Rb6p8AUu_1c/mqdefault.jpg","status":"public","gepland":null,"duur":"PT23S","weergaven":1650,"likes":33,"reacties":0}],"werkplaats":{"map":"~/Documents/modobeam","git":"modobeam","rol":"Marketing explained · lange uitlegvideo's","skills":[{"naam":"youtube-video-productie","icoon":"🎬","wat":"Lange uitlegvideo van script tot publicatie: Higgsfield-shots, stem, Remotion, Studio-upload.","start":"Maak een nieuwe Modobeam-video over \u003conderwerp>"},{"naam":"youtube-short-promo","icoon":"⚡","wat":"Promo-short van 30-45 s bij een lange video, linkt door als Gerelateerde video.","start":"Maak de promo-short bij Modobeam-video \u003cNN>"},{"naam":"youtube-clipping","icoon":"✂️","wat":"Serie 9:16-clips uit een lange video, met captions en eindkaart naar de lange video.","start":"Maak clips van Modobeam-video \u003cNN>"}],"open":[],"laatst":null},"live":null},{"sleutel":"EASYUNFOLD","naam":"Easy Unfold","id":"UCY1BvT4ShG5LIXzMaj3zB9A","kleur":"#B5D600","titel":"Easy Unfold","avatar":"https://yt3.ggpht.com/Vtf_BDAk9PNCQY8jmrilUZlrpaTMwvWDOOIl3oeXdtbC-gxKaP28Lxd4E4ToIcFtv_vdf0RN0w=s88-c-k-c0x00ffffff-no-rj","abonnees":1,"totaalWeergaven":0,"aantalVideos":2,"periode":{"views":0,"estimatedMinutesWatched":0,"subscribersGained":0,"subscribersLost":0,"likes":0,"comments":0},"vorigePeriode":{"views":0,"estimatedMinutesWatched":0,"subscribersGained":0,"subscribersLost":0,"likes":0,"comments":0},"perDag":[{"dag":"2026-10-11","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-12","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-13","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-14","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-15","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-16","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-17","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-18","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-19","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-20","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-21","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-22","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-23","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-24","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-25","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-26","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-27","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-28","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-29","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-30","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-31","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-01","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-02","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-03","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-04","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-05","weergaven":0,"minuten":0,"erbij":0}],"top":[],"videos":[{"id":"29df1e6Z4qY","titel":"The 7 Patterns That Solve a Rubik's Cube #shorts","gepubliceerd":"2026-11-07T22:02:45Z","thumb":"https://i.ytimg.com/vi/29df1e6Z4qY/mqdefault.jpg","status":"public","gepland":null,"duur":"PT1M24S","weergaven":2,"likes":0,"reacties":0},{"id":"iHef2uAQKf4","titel":"Every Poker Hand Ranked in 30 Seconds #shorts","gepubliceerd":"2026-11-07T21:35:32Z","thumb":"https://i9.ytimg.com/vi/iHef2uAQKf4/mqdefault.jpg?sqp=CJTPvtcG&rs=AOn4CLDMe5nbMVD9nxp-5CpEMn0NIxr49Q","status":"private","gepland":"2026-11-08T16:00:00Z","duur":"PT29S","weergaven":0,"likes":0,"reacties":0},{"id":"LXYmVePeRsM","titel":"Poker Hands Ranked: All 10 Hands From Worst to Best (+ Quiz)","gepubliceerd":"2026-11-07T21:34:00Z","thumb":"https://i9.ytimg.com/vi/LXYmVePeRsM/mqdefault.jpg?sqp=CJTPvtcG&rs=AOn4CLCOLnArxewzdVa4oUYbPht5_rBIxg","status":"private","gepland":"2026-11-08T16:00:00Z","duur":"PT3M55S","weergaven":0,"likes":0,"reacties":0},{"id":"Va3Ka3EQczE","titel":"The Entire Rubik's Cube Method in 60 Seconds #shorts","gepubliceerd":"2026-11-07T20:22:04Z","thumb":"https://i9.ytimg.com/vi/Va3Ka3EQczE/mqdefault.jpg?sqp=CJTPvtcG&rs=AOn4CLBzU0VCdEvCaNudO3ybw64frmhLwA","status":"private","gepland":null,"duur":"PT1M","weergaven":21,"likes":1,"reacties":0},{"id":"MtIQeVJBAm8","titel":"How to Solve a Rubik's Cube (Easiest Beginner Method)","gepubliceerd":"2026-11-07T20:21:29Z","thumb":"https://i.ytimg.com/vi/MtIQeVJBAm8/mqdefault.jpg","status":"public","gepland":null,"duur":"PT8M19S","weergaven":4,"likes":1,"reacties":0}],"werkplaats":{"map":"~/Documents/okay-but-how","git":"okay-but-how","rol":"Faceless how-to · samen met Bowie","skills":[{"naam":"easy-unfold","icoon":"🧩","wat":"Lange how-to (8-10 min) + Short: zoekwoord, script met cues, stem Cedric, Remotion in Acid Volt, mastering, handleiding op Netlify, privé upload.","start":"Maak Easy Unfold-video 03 over \u003conderwerp>"},{"naam":"youtube-clipping","icoon":"✂️","wat":"Shorts knippen uit een eigen lange video.","start":"Maak clips van Easy Unfold-video \u003cNN>"}],"open":["Bowie als beheerder toevoegen","Stemsnelheid kiezen: 1.12 (Poker v2) of 0.93","Bestaande video's masteren op -14 LUFS"],"laatst":{"datum":"2026-11-07T23:07:31+01:00","onderwerp":"Rubik Short: titel/beschrijving eerlijker; nieuwe render wacht op uploadlimiet"}},"live":null},{"sleutel":"WHYSTRENDING","naam":"Why's Trending?","id":"UCDjHZmmTIm7HcQAJvaDKqnA","kleur":"#FF3D8B","titel":"Why's Trending?","avatar":"https://yt3.ggpht.com/7ZTWvokt3kVd-kBPPHKRJ95xlnN4KuSmrQndM93YZracygtXWQps5YPtzrIFMr0K-rzb8VAfQA=s88-c-k-c0x00ffffff-no-rj","abonnees":1,"totaalWeergaven":0,"aantalVideos":6,"periode":{"views":0,"estimatedMinutesWatched":0,"subscribersGained":0,"subscribersLost":0,"likes":0,"comments":0},"vorigePeriode":{"views":0,"estimatedMinutesWatched":0,"subscribersGained":0,"subscribersLost":0,"likes":0,"comments":0},"perDag":[{"dag":"2026-10-11","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-12","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-13","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-14","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-15","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-16","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-17","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-18","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-19","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-20","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-21","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-22","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-23","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-24","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-25","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-26","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-27","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-28","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-29","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-30","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-31","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-01","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-02","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-03","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-04","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-05","weergaven":0,"minuten":0,"erbij":0}],"top":[],"videos":[{"id":"KX8ziaxs9PE","titel":"NASA Is Hiring Astronauts (For a Moon Base) #shorts","gepubliceerd":"2026-11-07T21:48:34Z","thumb":"https://i.ytimg.com/vi/KX8ziaxs9PE/mqdefault.jpg","status":"public","gepland":null,"duur":"PT51S","weergaven":2,"likes":0,"reacties":0},{"id":"Wl70vi6QAsk","titel":"Why Melania Is Going to the LSU Game (It's Not Football) #shorts","gepubliceerd":"2026-11-07T21:09:38Z","thumb":"https://i.ytimg.com/vi/Wl70vi6QAsk/mqdefault.jpg","status":"public","gepland":null,"duur":"PT54S","weergaven":4,"likes":2,"reacties":0},{"id":"sFJxVIQ5WKo","titel":"Trump Wants the UFC Boss as His Press Secretary #shorts","gepubliceerd":"2026-11-07T20:36:03Z","thumb":"https://i.ytimg.com/vi/sFJxVIQ5WKo/mqdefault.jpg","status":"public","gepland":null,"duur":"PT55S","weergaven":4,"likes":0,"reacties":0},{"id":"L1SrBQcS9OI","titel":"The Man From Japan Taking On FIFA's Infantino #shorts","gepubliceerd":"2026-11-07T20:25:56Z","thumb":"https://i.ytimg.com/vi/L1SrBQcS9OI/mqdefault.jpg","status":"public","gepland":null,"duur":"PT1M3S","weergaven":3,"likes":0,"reacties":0},{"id":"HWGO_7ihVLc","titel":"Florida State Is Paying $47M to Fire Its Coach #shorts","gepubliceerd":"2026-11-07T19:03:41Z","thumb":"https://i.ytimg.com/vi/HWGO_7ihVLc/mqdefault.jpg","status":"public","gepland":null,"duur":"PT52S","weergaven":75,"likes":1,"reacties":0},{"id":"6bBtaQ0HHtI","titel":"Heath Ledger Was Nolan's THIRD Choice for the Joker #shorts","gepubliceerd":"2026-11-07T18:55:20Z","thumb":"https://i.ytimg.com/vi/6bBtaQ0HHtI/mqdefault.jpg","status":"public","gepland":null,"duur":"PT49S","weergaven":76,"likes":2,"reacties":0}],"werkplaats":{"map":"~/Documents/whys-trending","git":"whys-trending","rol":"Trend-explainers van 40-60 s · zelfstandig publiceren","skills":[{"naam":"whys-trending","icoon":"📈","wat":"Trendscan, fact check (2+ bronnen), stem Lily, Remotion in roze huisstijl, upload en publicatie.","start":"Maak een video voor Why's Trending"},{"naam":"youtube-clipping","icoon":"✂️","wat":"Clips uit andermans video's, alleen met geldige rechtengrond en eigen laag.","start":"Zoek video's die we mogen clippen over \u003conderwerp>"}],"open":["Trendscan (Google Trends + Whop) verder automatiseren"],"laatst":{"datum":"2026-11-07T22:49:05+01:00","onderwerp":"Video 006 NASA live (eerste met echte beelden)"}},"live":null},{"sleutel":"PLAYERATLAS","naam":"Player Atlas","id":"UCHJ0I6Geqeupn-nnY48tmew","kleur":"#3DF5C0","titel":"Player Atlas","avatar":"https://yt3.ggpht.com/iblzhSzggCHno6zrSo3z6P2LZS1c9PPtGDefOAVXvHAQaxm8znrD7oDk9aI3Y2UzPDoFwbXj6g=s88-c-k-c0x00ffffff-no-rj","abonnees":0,"totaalWeergaven":0,"aantalVideos":1,"periode":{"views":0,"estimatedMinutesWatched":0,"subscribersGained":0,"subscribersLost":0,"likes":0,"comments":0},"vorigePeriode":{"views":0,"estimatedMinutesWatched":0,"subscribersGained":0,"subscribersLost":0,"likes":0,"comments":0},"perDag":[{"dag":"2026-10-11","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-12","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-13","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-14","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-15","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-16","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-17","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-18","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-19","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-20","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-21","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-22","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-23","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-24","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-25","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-26","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-27","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-28","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-29","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-30","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-31","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-01","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-02","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-03","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-04","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-05","weergaven":0,"minuten":0,"erbij":0}],"top":[],"videos":[{"id":"6xR_2VY2y98","titel":"From Dishwasher to £75 Million: Virgil van Dijk's Route #shorts","gepubliceerd":"2026-11-07T22:22:14Z","thumb":"https://i9.ytimg.com/vi/6xR_2VY2y98/mqdefault.jpg?sqp=CJTPvtcG&rs=AOn4CLDmL33wU2WT_3Ymx5yEyKgGl71PoA","status":"private","gepland":null,"duur":"PT43S","weergaven":1,"likes":0,"reacties":0},{"id":"cbzNR-djRYc","titel":"Virgil van Dijk: From Dishwasher to £75 Million | The Route","gepubliceerd":"2026-11-07T22:06:36Z","thumb":"https://i.ytimg.com/vi/cbzNR-djRYc/mqdefault.jpg","status":"public","gepland":null,"duur":"PT4M1S","weergaven":1,"likes":0,"reacties":0}],"werkplaats":{"map":"~/Documents/sporter-kanaal","git":"sporter-kanaal","rol":"Sporterscarrières als kaartroute · samen met Bowie","skills":[{"naam":"player-atlas","icoon":"🗺️","wat":"Eén sporter per video: Wikidata-carrière, fact check (2 bronnen), inkomen als schatting, kaartroute in Remotion, Short, thumbnail, privé upload.","start":"Maak de volgende Player Atlas-video over \u003csporter>"}],"open":["Stem kiezen (001 gebruikt nu Lily)","VS-kaart bouwen voor NBA/NFL","Bowie als beheerder","2FA/passkey op het account"],"laatst":{"datum":"2026-11-07T23:32:29+01:00","onderwerp":"No.001: route via Tilburg, beeld klopt bij tekst (lang + Short opnieuw gerenderd)"}},"live":null},{"sleutel":"WHATAI","naam":"What AI Was Thinking","id":"UCm3f-JqXH2f42K35kLJmjgQ","kleur":"#A98BFF","titel":"What AI Was Thinking","avatar":"https://yt3.ggpht.com/LnIAMM3q6afe4juLBxQyEM3CiTVhHeWUqZd0ZQc8NPBxD_Q6_QumlHS9pBEdQVFPTjTBlnfZcw=s88-c-k-c0x00ffffff-no-rj","abonnees":0,"totaalWeergaven":0,"aantalVideos":0,"periode":{"views":0,"estimatedMinutesWatched":0,"subscribersGained":0,"subscribersLost":0,"likes":0,"comments":0},"vorigePeriode":{"views":0,"estimatedMinutesWatched":0,"subscribersGained":0,"subscribersLost":0,"likes":0,"comments":0},"perDag":[{"dag":"2026-10-11","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-12","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-13","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-14","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-15","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-16","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-17","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-18","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-19","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-20","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-21","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-22","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-23","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-24","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-25","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-26","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-27","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-28","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-29","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-30","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-10-31","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-01","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-02","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-03","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-04","weergaven":0,"minuten":0,"erbij":0},{"dag":"2026-11-05","weergaven":0,"minuten":0,"erbij":0}],"top":[],"videos":[],"werkplaats":{"map":"~/Documents/what-ai-was-thinking","git":"what-ai-was-thinking","rol":"AI doet iets geks · wat dacht hij? · merkkanaal onder modobeam@","skills":[],"open":["Stem voor het AI-personage kiezen","Eerste 3 Shorts: make it pop, €10 dinner, soep die omhoog stroomt","Skill what-ai-was-thinking maken na video 001"],"laatst":{"datum":"2026-11-07T23:31:37+01:00","onderwerp":"Kanaal live als merkkanaal onder modobeam@"}},"live":null}]};
 const nf = new Intl.NumberFormat('nl-NL');
 const fmt = (n) => nf.format(Math.round(n || 0));
 const uren = (min) => (min / 60).toLocaleString('nl-NL', { maximumFractionDigits: 1 });
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-function delta(nu, voor) {
-  if (!voor) return nu ? '<span class="d op">nieuw</span>' : '<span class="d nul">–</span>';
-  const p = (nu - voor) / voor * 100;
-  const k = p > 0.5 ? 'op' : p < -0.5 ? 'neer' : 'nul';
-  return `<span class="d ${k}">${p > 0 ? '+' : ''}${p.toFixed(0)}%</span>`;
-}
-function grafiek(reeks, kleur) {
-  if (!reeks.length) return '<div class="leeg">Nog geen data in deze periode.</div>';
-  const w = 300, h = 80, max = Math.max(1, ...reeks.map((r) => r.weergaven));
-  const bw = w / reeks.length;
-  const staven = reeks.map((r, i) => {
-    const bh = Math.max(1, r.weergaven / max * (h - 4));
-    return `<rect x="${(i * bw + 1).toFixed(1)}" y="${(h - bh).toFixed(1)}" width="${Math.max(1, bw - 2).toFixed(1)}" height="${bh.toFixed(1)}" rx="1.5" fill="${kleur}"><title>${r.dag}: ${fmt(r.weergaven)} weergaven</title></rect>`;
-  }).join('');
-  return `<svg class="grafiek" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">${staven}</svg>`;
-}
+const $ = (s, el = document) => el.querySelector(s);
+const ICON = {
+  studio: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
+  stats: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg>',
+  yt: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8ZM10 15V9l5.2 3Z"/></svg>',
+};
+let filter = 'ALLE';
+const kanalen = () => (DATA?.kanalen || []).filter((k) => filter === 'ALLE' || k.sleutel === filter);
+const ok = () => kanalen().filter((k) => !k.fout);
+const som = (f) => ok().reduce((s, k) => s + (f(k) || 0), 0);
+const vind = (s) => DATA.kanalen.find((x) => x.sleutel === s);
+
 function sinds(iso) {
   const d = (Date.now() - Date.parse(iso)) / 36e5;
   if (d < 1) return 'zojuist';
@@ -160,110 +223,187 @@ function sinds(iso) {
   const dg = Math.round(d / 24);
   return dg === 1 ? 'gisteren' : `${dg} dagen geleden`;
 }
-function liveRegel(k) {
-  const l = k.live;
-  if (!l) return `<div class="live"><span class="dot"></span><span class="z">Live-teller loopt vanaf nu mee; na de volgende verversing zie je hier wat er sindsdien bij kwam.</span></div>`;
-  const u = Math.max(1, Math.round((Date.parse(DATA.bijgewerkt) - Date.parse(l.sinds)) / 36e5));
-  return `<div class="live"><span class="dot"></span><span><b>+${fmt(l.weergaven)}</b> weergaven${l.abonnees ? ` · <b>${l.abonnees > 0 ? '+' : ''}${fmt(l.abonnees)}</b> abonnees` : ''} <span class="z">laatste ${u} uur · live</span></span></div>`;
+function delta(nu, voor, lang) {
+  if (!voor) return nu ? '<span class="d op">nieuw</span>' : '<span class="d nul">–</span>';
+  const p = (nu - voor) / voor * 100;
+  const k = p > 0.5 ? 'op' : p < -0.5 ? 'neer' : 'nul';
+  return `<span class="d ${k}">${p > 0.5 ? '↑' : p < -0.5 ? '↓' : ''} ${Math.abs(p).toFixed(0)}%${lang ? ' <span class="nul" style="font-weight:500">vs vorige 28d</span>' : ''}</span>`;
 }
-function werkplaats(k) {
-  const w = k.werkplaats;
-  if (!w) return '';
-  const chips = w.skills.map((s) => `<button class="skill${s.tebouwen ? ' bouwen' : ''}" data-start="${esc(s.start)}" title="${esc(s.naam)}: klik om de startzin te kopiëren">${s.icoon} ${esc(s.start)}</button>`).join('');
-  const uitleg = w.skills.map((s) => `<div><b>${esc(s.naam)}</b>${s.tebouwen ? ' (te bouwen)' : ''} · ${esc(s.wat)}</div>`).join('');
-  const open = w.open?.length ? `<div class="open">${w.open.map((o) => `<span>${esc(o)}</span>`).join('')}</div>` : '';
-  const laatst = `<div class="laatst">${w.laatst ? `Laatst gewerkt ${sinds(w.laatst.datum)}: <code>${esc(w.laatst.onderwerp)}</code> · ` : ''}<code>${esc(w.map)}</code></div>`;
-  const n = w.open?.length || 0;
-  return `<div class="werk"><div class="chips"><span class="lbl">Start</span>${chips}</div>
-    <details><summary>Skills${n ? ` · ${n} open punt${n === 1 ? '' : 'en'}` : ''}</summary><div class="uitleg">${uitleg}</div>${open}${laatst}</details></div>`;
+function telOp(el, doel, opmaak) {
+  const start = performance.now(), duur = 750;
+  const stap = (t) => { const p = Math.min(1, (t - start) / duur); el.textContent = opmaak(doel * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(stap); };
+  requestAnimationFrame(stap);
 }
-function strook() {
-  const nu = Date.now();
-  const items = [];
-  for (const k of DATA.kanalen) for (const v of (k.videos || [])) {
+
+/* Gestapelde staafgrafiek per dag, met tooltip (muis en vinger) */
+function teken(el, reeksen, metriek, compact) {
+  const dagen = [...new Set(reeksen.flatMap((r) => r.data.map((d) => d.dag)))].sort();
+  if (!dagen.length) { el.innerHTML = '<div class="leeg">Nog geen data in deze periode.</div>'; el.onpointermove = null; return; }
+  const waarde = (d) => !d ? 0 : metriek === 'minuten' ? d.minuten / 60 : d[metriek];
+  const per = dagen.map((dag) => reeksen.map((r) => Math.max(0, waarde(r.data.find((d) => d.dag === dag)))));
+  const totaal = per.map((a) => a.reduce((s, x) => s + x, 0));
+  const max = Math.max(...totaal);
+  if (!max) { el.innerHTML = '<div class="leeg">Nog geen ' + ({ weergaven: 'weergaven', minuten: 'kijktijd', erbij: 'nieuwe abonnees' }[metriek]) + ' in deze periode.</div>'; el.onpointermove = null; return; }
+  const W = 600, H = compact ? 90 : 170, gap = compact ? 2 : 3, bw = W / dagen.length;
+  let svg = '';
+  if (!compact) for (let i = 1; i <= 3; i++) svg += `<line x1="0" x2="${W}" y1="${(H - H * i / 3.2).toFixed(1)}" y2="${(H - H * i / 3.2).toFixed(1)}" stroke="rgba(255,255,255,.05)"/>`;
+  per.forEach((a, i) => {
+    let y = H;
+    a.forEach((v, j) => {
+      const h = v / max * (H - 8);
+      if (h <= 0) return;
+      y -= h;
+      svg += `<rect x="${(i * bw + gap / 2).toFixed(1)}" y="${y.toFixed(1)}" width="${Math.max(1, bw - gap).toFixed(1)}" height="${h.toFixed(1)}" rx="${compact ? 1.5 : 2.5}" fill="${reeksen[j].kleur}" opacity=".9"/>`;
+    });
+  });
+  svg += `<rect class="cursor" x="0" y="0" width="${bw.toFixed(1)}" height="${H}" fill="rgba(255,255,255,.06)" opacity="0"/>`;
+  el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${svg}</svg><div class="tip"></div>`;
+  const tip = $('.tip', el), cur = $('.cursor', el);
+  const eenheid = { weergaven: 'weergaven', minuten: 'kijkuren', erbij: 'abonnees erbij' }[metriek];
+  el.onpointermove = (e) => {
+    const r = el.getBoundingClientRect();
+    const i = Math.min(dagen.length - 1, Math.max(0, Math.floor((e.clientX - r.left) / r.width * dagen.length)));
+    const d = new Date(dagen[i] + 'T12:00').toLocaleDateString('nl-NL', { weekday: 'short', day: 'numeric', month: 'short' });
+    tip.innerHTML = `${metriek === 'minuten' ? totaal[i].toLocaleString('nl-NL', { maximumFractionDigits: 1 }) : fmt(totaal[i])} ${eenheid}<span>${d}</span>`;
+    tip.style.left = `${Math.min(Math.max((i + .5) / dagen.length * r.width, 60), r.width - 60)}px`;
+    tip.style.opacity = 1;
+    cur.setAttribute('x', (i * bw).toFixed(1)); cur.setAttribute('opacity', 1);
+  };
+  el.onpointerleave = () => { tip.style.opacity = 0; cur.setAttribute('opacity', 0); };
+}
+
+function vulKop() {
+  const t = new Date(DATA.bijgewerkt);
+  $('#pilTxt').textContent = `Bijgewerkt ${t.toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit' })}`;
+  $('#pil').title = `Live-tellers van ${t.toLocaleString('nl-NL', { dateStyle: 'medium', timeStyle: 'short' })}. Grafieken en kijkuren komen uit YouTube Analytics, die 1-2 dagen achterloopt (t/m ${new Date(DATA.tot + 'T12:00').toLocaleDateString('nl-NL', { day: 'numeric', month: 'long' })}).`;
+  $('#ondertitel').textContent = DATA.kanalen.map((k) => k.naam).join(' · ');
+}
+function vulFilter() {
+  const knop = (s, naam, kleur, avatar) => `<button class="fk${avatar ? '' : ' zonder'}${filter === s ? ' aan' : ''}" data-f="${s}" style="--accent:${kleur}">${avatar ? `<img src="${esc(avatar)}" alt="">` : ''}${esc(naam)}</button>`;
+  $('#filter').innerHTML = knop('ALLE', 'Alle kanalen', '#F4F4F6') + DATA.kanalen.map((k) => knop(k.sleutel, k.naam, k.kleur, k.avatar)).join('');
+}
+function vulKpis() {
+  const live = ok().some((k) => k.live);
+  const prive = som((k) => k.videos.filter((v) => v.status !== 'public').length);
+  const kp = [
+    ['Abonnees', som((k) => k.abonnees), fmt, (() => { const n = som((k) => k.periode.subscribersGained - k.periode.subscribersLost); return `<span class="d ${n > 0 ? 'op' : 'nul'}">${n > 0 ? '+' : ''}${fmt(n)} in 28d</span>`; })()],
+    ['Live, laatste uren', live ? som((k) => k.live?.weergaven) : null, (v) => '+' + fmt(v), `<span class="d nul">${live ? 'weergaven, bijna realtime' : 'start bij volgende verversing'}</span>`],
+    ['Video\'s', som((k) => k.aantalVideos), fmt, `<span class="d nul">${prive} ingepland of privé</span>`],
+    ['Weergaven 28d', som((k) => k.periode.views), fmt, delta(som((k) => k.periode.views), som((k) => k.vorigePeriode.views), true)],
+    ['Kijkuren 28d', som((k) => k.periode.estimatedMinutesWatched) / 60, (v) => v.toLocaleString('nl-NL', { maximumFractionDigits: 1 }), delta(som((k) => k.periode.estimatedMinutesWatched), som((k) => k.vorigePeriode.estimatedMinutesWatched), true)],
+    ['Likes 28d', som((k) => k.periode.likes), fmt, `<span class="d nul">${fmt(som((k) => k.periode.comments))} reacties</span>`],
+  ];
+  $('#kpis').innerHTML = kp.map(([l, w, f, d], i) => `<div class="kpi"><div class="l">${l}</div><div class="w" data-i="${i}">${w == null ? '–' : f(0)}</div>${d}</div>`).join('');
+  kp.forEach(([, w, f], i) => { if (w != null) telOp($(`.kpi .w[data-i="${i}"]`), w, f); });
+}
+let heroMetriek = 'weergaven';
+function vulHero() {
+  teken($('#heroGraf'), ok().map((k) => ({ kleur: k.kleur, data: k.perDag || [] })), heroMetriek, false);
+  $('#grafTitel').textContent = { weergaven: 'Weergaven per dag', minuten: 'Kijkuren per dag', erbij: 'Abonnees erbij per dag' }[heroMetriek];
+  $('#legenda').innerHTML = ok().map((k) => `<span><i style="background:${k.kleur}"></i>${esc(k.naam)}</span>`).join('');
+}
+function vulStrook() {
+  const nu = Date.now(), items = [];
+  for (const k of kanalen()) for (const v of (k.videos || [])) {
     const gepland = v.gepland && Date.parse(v.gepland) > nu;
     if (v.status !== 'public' && !gepland) continue;
     items.push({ k, v, gepland, t: Date.parse(gepland ? v.gepland : v.gepubliceerd) });
   }
-  const komend = items.filter((i) => i.gepland).sort((a, b) => a.t - b.t);
-  const live = items.filter((i) => !i.gepland).sort((a, b) => b.t - a.t).slice(0, 12);
-  const kaart = ({ k, v, gepland, t }) => {
+  const lijst = [...items.filter((i) => i.gepland).sort((a, b) => a.t - b.t), ...items.filter((i) => !i.gepland).sort((a, b) => b.t - a.t).slice(0, 14)];
+  $('#strook').innerHTML = lijst.map(({ k, v, gepland, t }) => {
     const d = k.live?.perVideo?.[v.id];
-    const url = gepland ? `https://studio.youtube.com/video/${v.id}/edit` : `https://www.youtube.com/watch?v=${v.id}`;
     const uur = (nu - t) / 36e5;
     const badge = gepland
-      ? `<span class="badge gepland">Live ${new Date(t).toLocaleString('nl-NL', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>`
-      : uur < 48 ? `<span class="badge">${uur < 1 ? 'Net live' : 'Live · ' + sinds(new Date(t).toISOString())}</span>` : '';
+      ? `<span class="badge gepland">◷ ${new Date(t).toLocaleString('nl-NL', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>`
+      : uur < 48 ? `<span class="badge">● ${uur < 1 ? 'Net live' : 'Live, ' + sinds(new Date(t).toISOString())}</span>` : '';
+    const url = gepland ? `https://studio.youtube.com/video/${v.id}/edit` : `https://www.youtube.com/watch?v=${v.id}`;
     return `<a class="vid" style="--accent:${k.kleur}" href="${url}" target="_blank" rel="noopener">
-      <div class="beeld" style="background-image:url('${esc(v.thumb)}')">${badge}<span class="kn" style="border-left:3px solid ${k.kleur}">${esc(k.naam)}</span></div>
+      <div class="beeld"><img loading="lazy" src="${esc(v.thumb)}" alt="">${badge}<span class="kn">${k.avatar ? `<img src="${esc(k.avatar)}" alt="">` : ''}${esc(k.naam)}</span><span class="play"><b>▶</b></span></div>
       <div class="tx"><div class="ti">${esc(v.titel)}</div>
-      <div class="sub"><span>${gepland ? 'ingepland' : sinds(new Date(t).toISOString())}</span><span>${d ? `<span class="plus">+${fmt(d)}</span> · ` : ''}${gepland ? '' : fmt(v.weergaven) + ' weergaven'}</span></div></div></a>`;
-  };
-  const el = document.getElementById('strook');
-  el.innerHTML = [...komend, ...live].map(kaart).join('') || '<div class="leeg">Nog niets live.</div>';
+      <div class="sub"><span>${gepland ? 'Ingepland, opent Studio' : sinds(new Date(t).toISOString())}</span><span>${d ? `<span class="plus">+${fmt(d)}</span> · ` : ''}${gepland ? '' : fmt(v.weergaven) + ' weergaven'}</span></div></div></a>`;
+  }).join('') || '<div class="leeg">Nog niets live.</div>';
 }
-function kanaalKaart(k) {
+
+function rij(v, rechts, meta) {
+  const url = v.status === 'public' ? `https://www.youtube.com/watch?v=${v.id}` : `https://studio.youtube.com/video/${v.id}/edit`;
+  return `<li><a href="${url}" target="_blank" rel="noopener"><img loading="lazy" src="${esc(v.thumb || `https://i.ytimg.com/vi/${v.id}/mqdefault.jpg`)}" alt=""><div style="min-width:0"><div class="t">${esc(v.titel)}</div>${meta ? `<div class="m">${meta}</div>` : ''}</div><div class="r">${rechts}</div></a></li>`;
+}
+const isGepland = (v) => v.status !== 'public' || (v.gepland && Date.parse(v.gepland) > Date.now());
+function tabInhoud(k, tab) {
+  if (tab === 'top') {
+    if (!k.top.length) return '<div class="leeg">Nog geen weergaven in de laatste 28 dagen.</div>';
+    return '<ul>' + k.top.slice(0, 5).map((t) => {
+      const v = k.videos.find((y) => y.id === t.id) || { id: t.id, titel: t.titel, status: 'public' };
+      return rij(v, `${fmt(t.weergaven)}<small>${Math.round(t.kijkpct)}% bekeken</small>`, `${uren(t.minuten)} kijkuur`);
+    }).join('') + '</ul>';
+  }
+  if (tab === 'recent') {
+    const r = k.videos.filter((v) => v.status === 'public').slice(0, 6);
+    if (!r.length) return '<div class="leeg">Nog niets openbaar.</div>';
+    return '<ul>' + r.map((v) => { const d = k.live?.perVideo?.[v.id]; return rij(v, `${fmt(v.weergaven)}<small>${d ? `<span class="plus">+${fmt(d)}</span> recent` : 'weergaven'}</small>`, sinds(v.gepubliceerd)); }).join('') + '</ul>';
+  }
+  const g = k.videos.filter(isGepland).sort((a, b) => (a.gepland || a.gepubliceerd).localeCompare(b.gepland || b.gepubliceerd));
+  if (!g.length) return '<div class="leeg">Niets ingepland of privé.</div>';
+  return '<ul>' + g.map((v) => rij(v, v.gepland ? `<span class="label gepland">${new Date(v.gepland).toLocaleString('nl-NL', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>` : `<span class="label">${v.status === 'private' ? 'privé' : v.status === 'unlisted' ? 'verborgen' : v.status}</span>`, 'opent Studio')).join('') + '</ul>';
+}
+function werkplaats(k) {
+  const w = k.werkplaats;
+  if (!w) return '';
+  const n = w.open?.length || 0;
+  return `<div class="werk"><div class="chips">${w.skills.map((s) => `<button class="skill${s.tebouwen ? ' bouwen' : ''}" data-start="${esc(s.start)}" title="${esc(s.naam)}: klik om de startzin te kopiëren">${s.icoon} ${esc(s.start)}</button>`).join('')}</div>
+    <details><summary>Skills en open punten${n ? ` (${n})` : ''}</summary>
+    <div class="uitleg">${w.skills.map((s) => `<div><b>${esc(s.naam)}</b>${s.tebouwen ? ' (te bouwen)' : ''} · ${esc(s.wat)}</div>`).join('')}</div>
+    ${n ? `<div class="open">${w.open.map((o) => `<span>${esc(o)}</span>`).join('')}</div>` : ''}
+    <div class="laatst">${w.laatst ? `Laatst gewerkt ${sinds(w.laatst.datum)}: ${esc(w.laatst.onderwerp)} · ` : ''}${esc(w.map)}</div></details></div>`;
+}
+function kaart(k) {
   const studio = `https://studio.youtube.com/channel/${k.id}`;
-  const kop = `<div class="kop"><span class="streep" style="background:${k.kleur}"></span>
-    ${k.avatar ? `<img src="${esc(k.avatar)}" alt="">` : ''}
-    <div style="flex:1"><h2>${esc(k.titel || k.naam)}</h2>
-    <a href="${studio}" target="_blank">Studio</a><a href="${studio}/analytics/tab-overview/period-default" target="_blank">Analytics</a><a href="https://www.youtube.com/channel/${k.id}" target="_blank">Kanaal</a></div></div>`;
-  if (k.fout) return `<article class="kanaal" id="k-${k.sleutel}" style="--accent:${k.kleur}">${kop}<div class="fout">${esc(k.fout)}</div>${werkplaats(k)}</article>`;
-  const p = k.periode, v = k.vorigePeriode;
+  const kop = `<div class="kkop">${k.avatar ? `<img src="${esc(k.avatar)}" alt="">` : ''}<div style="min-width:0"><h3>${esc(k.titel || k.naam)}</h3><div class="rol">${esc(k.werkplaats?.rol || '')}</div></div>
+    <div class="acties"><a class="ib" title="YouTube Studio" href="${studio}" target="_blank" rel="noopener">${ICON.studio}</a><a class="ib" title="Analytics" href="${studio}/analytics/tab-overview/period-default" target="_blank" rel="noopener">${ICON.stats}</a><a class="ib" title="Kanaal op YouTube" href="https://www.youtube.com/channel/${k.id}" target="_blank" rel="noopener">${ICON.yt}</a></div></div>`;
+  if (k.fout) return `<article class="kaart fade" id="k-${k.sleutel}" style="--accent:${k.kleur}">${kop}<div class="fout">${esc(k.fout)}</div>${werkplaats(k)}</article>`;
+  const p = k.periode, v = k.vorigePeriode, l = k.live;
   const netto = (p.subscribersGained || 0) - (p.subscribersLost || 0);
-  const nettoV = (v.subscribersGained || 0) - (v.subscribersLost || 0);
-  const nu = Date.now();
-  const klaar = k.videos.filter((x) => x.status !== 'public' || (x.gepland && Date.parse(x.gepland) > nu))
-    .sort((a, b) => (a.gepland || a.gepubliceerd).localeCompare(b.gepland || b.gepubliceerd));
-  const recent = k.videos.filter((x) => x.status === 'public').slice(0, 5);
-  const regel = (x, rechts) => `<li><img src="${esc(x.thumb)}" alt=""><span class="t"><a href="https://studio.youtube.com/video/${x.id}/edit" target="_blank">${esc(x.titel)}</a></span>${rechts}</li>`;
-  return `<article class="kanaal" id="k-${k.sleutel}" style="--accent:${k.kleur}">${kop}
-    <div class="cijfers">
-      <div><div class="l">Abonnees</div><div class="w">${fmt(k.abonnees)}</div><span class="d ${netto > 0 ? 'op' : netto < 0 ? 'neer' : 'nul'}">${netto > 0 ? '+' : ''}${fmt(netto)} in 28 d</span></div>
-      <div><div class="l">Weergaven</div><div class="w">${fmt(p.views)}</div>${delta(p.views, v.views)}</div>
-      <div><div class="l">Kijkuren</div><div class="w">${uren(p.estimatedMinutesWatched)}</div>${delta(p.estimatedMinutesWatched, v.estimatedMinutesWatched)}</div>
+  const live = l
+    ? `<div class="livebalk"><span class="stip"></span><span><b>+${fmt(l.weergaven)}</b> weergaven${l.abonnees ? ` · <b>${l.abonnees > 0 ? '+' : ''}${fmt(l.abonnees)}</b> abonnees` : ''}</span><span class="nul" style="margin-left:auto">laatste ${Math.max(1, Math.round((Date.parse(DATA.bijgewerkt) - Date.parse(l.sinds)) / 36e5))} uur</span></div>`
+    : `<div class="livebalk wacht"><span class="stip"></span>Live-teller start bij de volgende verversing</div>`;
+  const nG = k.videos.filter(isGepland).length;
+  return `<article class="kaart fade" id="k-${k.sleutel}" style="--accent:${k.kleur}">${kop}
+    <div class="kc">
+      <div><div class="l">Abonnees</div><div class="w">${fmt(k.abonnees)}</div><span class="d ${netto > 0 ? 'op' : netto < 0 ? 'neer' : 'nul'}">${netto > 0 ? '+' : ''}${fmt(netto)} in 28d</span></div>
+      <div><div class="l">Weergaven 28d</div><div class="w">${fmt(p.views)}</div>${delta(p.views, v.views)}</div>
+      <div><div class="l">Kijkuren 28d</div><div class="w">${uren(p.estimatedMinutesWatched)}</div>${delta(p.estimatedMinutesWatched, v.estimatedMinutesWatched)}</div>
     </div>
-    ${liveRegel(k)}
-    <div class="blok"><h3>Weergaven per dag (Analytics)</h3>${grafiek(k.perDag, k.kleur)}</div>
-    <div class="blok"><h3>Klaar of ingepland</h3>${klaar.length ? '<ul>' + klaar.map((x) => regel(x,
-      x.gepland ? `<span class="label gepland">${new Date(x.gepland).toLocaleString('nl-NL', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>`
-                : `<span class="label">${x.status === 'private' ? 'privé' : x.status === 'unlisted' ? 'verborgen' : x.status}</span>`)).join('') + '</ul>' : '<div class="leeg">Niets ingepland of privé.</div>'}</div>
-    <div class="blok"><h3>Best bekeken (28 d)</h3>${k.top.length ? '<ol>' + k.top.slice(0, 5).map((t) => {
-      const x = k.videos.find((y) => y.id === t.id) || { id: t.id, titel: t.titel, thumb: `https://i.ytimg.com/vi/${t.id}/mqdefault.jpg` };
-      return regel(x, `<span class="n">${fmt(t.weergaven)} · ${Math.round(t.kijkpct)}%</span>`);
-    }).join('') + '</ol>' : '<div class="leeg">Nog geen weergaven in deze periode.</div>'}</div>
-    <div class="blok"><h3>Laatst gepubliceerd</h3>${recent.length ? '<ul>' + recent.map((x) => { const d = k.live?.perVideo?.[x.id]; return regel(x, `<span class="n">${d ? `<span class="plus">+${fmt(d)}</span> · ` : ''}${fmt(x.weergaven)}</span>`); }).join('') + '</ul>' : '<div class="leeg">Nog niets openbaar.</div>'}</div>
+    ${live}
+    <div class="kgraf"><div class="graftop"><span class="z">Per dag</span><div class="seg" data-kseg="${k.sleutel}"><button data-m="weergaven" class="aan">Weergaven</button><button data-m="minuten">Uren</button><button data-m="erbij">Abo's</button></div></div><div class="graf" data-kgraf="${k.sleutel}"></div></div>
+    <div class="tabs" data-ktab="${k.sleutel}"><button data-t="top" class="aan">Top 28d</button><button data-t="recent">Recent</button><button data-t="gepland">Ingepland${nG ? `<span class="n">${nG}</span>` : ''}</button></div>
+    <div class="lijst" data-klijst="${k.sleutel}">${tabInhoud(k, 'top')}</div>
     ${werkplaats(k)}
   </article>`;
 }
-if (!DATA) {
-  document.getElementById('kanalen').innerHTML = '<div class="leeg">Nog geen data. Draai: node ververs.mjs</div>';
-} else {
-  const ok = DATA.kanalen.filter((k) => !k.fout);
-  const som = (f) => ok.reduce((s, k) => s + (f(k) || 0), 0);
-  document.getElementById('meta').innerHTML =
-    `<span class="meta-lang">Analytics ${DATA.van} t/m ${DATA.tot} (YouTube loopt 1-2 dagen achter; % = t.o.v. 28 dagen ervoor) · </span>Bijgewerkt ${new Date(DATA.bijgewerkt).toLocaleString('nl-NL', { dateStyle: 'medium', timeStyle: 'short' })}`;
-  const tegel = (l, w, d = '') => `<div class="tegel"><div class="l">${l}</div><div class="w">${w}</div>${d}</div>`;
-  document.getElementById('totaal').innerHTML =
-    tegel('Abonnees', fmt(som((k) => k.abonnees))) +
-    tegel('Live', ok.some((k) => k.live) ? '+' + fmt(som((k) => k.live?.weergaven)) : '–', '<span class="d nul">weergaven, bijna realtime</span>') +
-    tegel('Weergaven 28d', fmt(som((k) => k.periode.views)), delta(som((k) => k.periode.views), som((k) => k.vorigePeriode.views))) +
-    tegel('Kijkuren 28d', uren(som((k) => k.periode.estimatedMinutesWatched)), delta(som((k) => k.periode.estimatedMinutesWatched), som((k) => k.vorigePeriode.estimatedMinutesWatched))) +
-    tegel('Ingepland', fmt(som((k) => k.videos.filter((x) => x.status !== 'public').length))) +
-    tegel('Video\'s', fmt(som((k) => k.aantalVideos)));
-  document.getElementById('kanalen').innerHTML = DATA.kanalen.map(kanaalKaart).join('');
-  strook();
-  document.getElementById('nav').innerHTML = DATA.kanalen.map((k) => `<a href="#k-${k.sleutel}" style="--accent:${k.kleur}">${esc(k.naam)}</a>`).join('');
-  document.querySelectorAll('[data-sc]').forEach((b) => b.addEventListener('click', () => document.getElementById('strook').scrollBy({ left: +b.dataset.sc * 540, behavior: 'smooth' })));
+function vulKaarten() {
+  $('#kanalen').innerHTML = kanalen().map(kaart).join('');
+  for (const k of ok()) teken($(`[data-kgraf="${k.sleutel}"]`), [{ kleur: k.kleur, data: k.perDag || [] }], 'weergaven', true);
 }
-const toast = Object.assign(document.createElement('div'), { className: 'toast' });
-document.body.appendChild(toast);
+function alles() { vulFilter(); vulKpis(); vulHero(); vulStrook(); vulKaarten(); }
+
+if (!DATA) { $('#kanalen').innerHTML = '<div class="leeg">Nog geen data. Draai: node ververs.mjs</div>'; }
+else { vulKop(); alles(); }
+
+const toast = $('#toast');
+const melding = (t) => { toast.textContent = t; toast.classList.add('aan'); clearTimeout(toast._t); toast._t = setTimeout(() => toast.classList.remove('aan'), 1600); };
 document.addEventListener('click', async (e) => {
-  const b = e.target.closest('.skill');
-  if (!b) return;
-  try { await navigator.clipboard.writeText(b.dataset.start); toast.textContent = 'Gekopieerd, plak in Claude'; }
-  catch { toast.textContent = b.dataset.start; }
-  toast.classList.add('aan'); clearTimeout(toast._t); toast._t = setTimeout(() => toast.classList.remove('aan'), 1600);
+  const f = e.target.closest('[data-f]');
+  if (f) { filter = f.dataset.f; alles(); window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+  const sc = e.target.closest('[data-sc]');
+  if (sc) { $('#strook').scrollBy({ left: +sc.dataset.sc * 600, behavior: 'smooth' }); return; }
+  const hs = e.target.closest('#heroSeg button');
+  if (hs) { heroMetriek = hs.dataset.m; $('#heroSeg').querySelectorAll('button').forEach((b) => b.classList.toggle('aan', b === hs)); vulHero(); return; }
+  const ks = e.target.closest('[data-kseg] button');
+  if (ks) { const s = ks.parentElement.dataset.kseg, k = vind(s); ks.parentElement.querySelectorAll('button').forEach((b) => b.classList.toggle('aan', b === ks)); teken($(`[data-kgraf="${s}"]`), [{ kleur: k.kleur, data: k.perDag || [] }], ks.dataset.m, true); return; }
+  const kt = e.target.closest('[data-ktab] button');
+  if (kt) { const s = kt.parentElement.dataset.ktab; kt.parentElement.querySelectorAll('button').forEach((b) => b.classList.toggle('aan', b === kt)); $(`[data-klijst="${s}"]`).innerHTML = tabInhoud(vind(s), kt.dataset.t); return; }
+  const sk = e.target.closest('.skill');
+  if (sk) { try { await navigator.clipboard.writeText(sk.dataset.start); melding('Gekopieerd, plak in Claude'); } catch { melding(sk.dataset.start); } }
 });
 </script>
 </body>
